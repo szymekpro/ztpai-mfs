@@ -1,0 +1,39 @@
+version: '3.10'
+services:
+  db:
+    image: postgres:14-alpine
+    ports:
+      - '5433:5432'
+
+    env_file:
+      - db.env
+
+    volumes:
+      - ${VOLUME_PATH_DB:-./data/db:/var/lib/postgresql/data/}
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    depends_on:
+      db:
+        condition: service_healthy
+
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        - COMM=${COMMAND:- }
+        - BACKEND_PORT_INTERNAL=${BACKEND_PORT_INTERNAL:-8000}
+      tags:
+        - test-backend-app:latest
+
+    ports:
+      - ${BACKEND_PORT:-8000:8000}
+
+    volumes:
+      - ${VOLUME_PATH_BACKEND:-./backend:/app/backend}
+      - ./fonts:/app/fonts
