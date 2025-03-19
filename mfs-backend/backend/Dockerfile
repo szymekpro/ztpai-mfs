@@ -22,4 +22,4 @@ RUN apk add --no-cache \
 
 COPY . /app/backend/
 
-CMD ["sh", "-c", "python manage.py migrate && ${RUN_SERVER}"]
+CMD ["sh", "-c", "python manage.py makemigrations user && python manage.py migrate && ${RUN_SERVER}"]
