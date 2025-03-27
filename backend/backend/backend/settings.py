@@ -43,11 +43,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_spectacular',
     'rest_framework',
-    'user',
     'corsheaders',
+    'users',
+    'gyms',
+    'memberships',
+    'payments',
+    'trainings',
 ]
 
-AUTH_USER_MODEL = 'user.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -66,7 +70,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'user.authentication.JWTAuthentication',
+        'users.authentication.JWTAuthentication',
     ],
 }
 

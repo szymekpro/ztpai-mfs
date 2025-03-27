@@ -22,8 +22,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView # type: ignore
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView # type: ignore
 
-from user import urls as user_urls
-from user.routers import router as user_router
+from users import urls as user_urls
+from users.routers import router as user_router
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
