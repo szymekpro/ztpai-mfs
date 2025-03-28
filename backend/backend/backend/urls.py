@@ -25,6 +25,8 @@ from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView #
 from users import urls as user_urls
 from users.routers import router as user_router
 
+from gyms.routers import router as gyms_router
+
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/api-auth/', include("rest_framework.urls")),
@@ -39,4 +41,8 @@ urlpatterns = [
 
     path('api/', include(user_urls)),
     path('api/', include(user_router.urls)),
+
+    path('api/', include(gyms_router.urls)),
+
+
 ]

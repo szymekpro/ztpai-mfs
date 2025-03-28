@@ -28,7 +28,7 @@ services:
       - ./backend:/backend
     working_dir: /backend/backend
     command: >
-      sh -c "python manage.py makemigrations user && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py makemigrations users && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=db
       - DB_NAME=postgres

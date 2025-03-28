@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from gyms.models import Trainer, Gym
-from payments.models import Payments
+from payments.models import Payment
 
 class ScheduledTraining(models.Model):
     STATUS_CHOICES = [
