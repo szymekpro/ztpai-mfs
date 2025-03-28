@@ -27,6 +27,8 @@ from users.routers import router as user_router
 
 from gyms.routers import router as gyms_router
 
+from memberships.routers import router as memberships_router
+
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/api-auth/', include("rest_framework.urls")),
@@ -43,6 +45,8 @@ urlpatterns = [
     path('api/', include(user_router.urls)),
 
     path('api/', include(gyms_router.urls)),
+
+    path('api/', include(memberships_router.urls)),
 
 
 ]

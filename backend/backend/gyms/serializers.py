@@ -1,4 +1,3 @@
-import re
 from rest_framework import serializers
 from .models import Gym, Trainer, TrainerAvailability
 
@@ -18,8 +17,7 @@ class GymSerializer(serializers.ModelSerializer):
         ]
 
     def validate_address(self, data):
-        address = data.get('address', '')
-        if not any(char.isdigit() for char in address):
+        if not any(char.isdigit() for char in data):
             raise serializers.ValidationError({
                 'address': 'Address must contain a street number.'
             })
@@ -31,7 +29,7 @@ class GymSerializer(serializers.ModelSerializer):
         return value
 
 class TrainerSerializer(serializers.ModelSerializer):
-    full_name = serializers.ReadOnlyField()  # ← pochodzi z @property
+    full_name = serializers.ReadOnlyField()
 
     class Meta:
         model = Trainer
