@@ -1,7 +1,5 @@
 import Form from "../components/auth/Form.tsx"
 
-function Register() {
+export default function RegisterPage() {
     return <Form route="/api/user/register/" method="register" />
 }
-
-export default Register
