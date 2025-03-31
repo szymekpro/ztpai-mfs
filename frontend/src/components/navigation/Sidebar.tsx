@@ -9,13 +9,13 @@ import {
     ListItemText,
     Divider,
     Box,
-    Tooltip
+    Tooltip,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import HomeIcon from '@mui/icons-material/Home';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import {FitnessCenter, CardMembership} from '@mui/icons-material';
+import {FitnessCenter, CardMembership, Logout} from '@mui/icons-material';
 import { NavLink, useLocation} from 'react-router-dom';
 
 
@@ -52,28 +52,47 @@ export default function Sidebar() {
         >
             <Box
                 sx={{
-                    height: 64,
+                    height: 96,
+                    position: 'relative',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: open ? 'flex-end' : 'center',
+                    justifyContent: 'center',
                     px: 1,
                 }}
             >
-                <IconButton onClick={toggleDrawer}>
-                    {open ? <ChevronLeftIcon sx={switchIconStyle}/> : <MenuIcon sx={switchIconStyle} />}
+                <IconButton
+                    onClick={toggleDrawer}
+                    sx={{
+                        position: 'absolute',
+                        left: 12,
+                        zIndex: 2,
+                    }}
+                >
+                    {open ? <ChevronLeftIcon sx={switchIconStyle} /> : <MenuIcon sx={switchIconStyle} />}
                 </IconButton>
+
+                {open && (
+                    <Box
+                        sx={{
+                            color: '#FFFBD8',
+                            fontWeight: 'bold',
+                            fontSize: '1.1rem',
+                        }}
+                    >
+                        <img src="/logo.png" alt="Logo" style={{ height: '128px', objectFit: 'contain' }} />
+                    </Box>
+                )}
             </Box>
 
             <Divider />
 
-            <List>
+            <List sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                 {[
-                    { text: 'Home', icon: <HomeIcon sx={iconStyle}/> , to: "/"},
+                    { text: 'Home', icon: <HomeIcon sx={iconStyle}/> , to: "/home"},
                     { text: 'Memberships', icon: <CardMembership sx={iconStyle}/>, to: "/memberships" },
                     { text: 'Our Gyms', icon: <FitnessCenter sx={iconStyle}/>, to: "/gyms" },
                     { text: 'Payments', icon: <CreditCardIcon sx={iconStyle}/>, to: "/payments" },
                 ].map(({ text, icon, to }) => {
-
                     const isActive = location.pathname === to;
 
                     return (
@@ -120,7 +139,50 @@ export default function Sidebar() {
                         </ListItem>
                     );
                 })}
+
+                {/* Logout na dole */}
+                <ListItem disablePadding sx={{ display: 'block', mt: 'auto' }}>
+                    <Tooltip title={!open ? 'Logout' : ''} placement="right">
+                        <ListItemButton
+                            component={NavLink}
+                            to="/logout"
+                            sx={{
+                                minHeight: 48,
+                                justifyContent: open ? 'initial' : 'center',
+                                px: 2.5,
+                                backgroundColor: '#619fd2',
+                                '& .MuiListItemIcon-root': {
+                                    fontSize: 44,
+                                    color: '#FFFBD8',
+                                },
+                                '&:hover': {
+                                    backgroundColor: '#5291c6',
+                                    borderRadius: '10px 0 0 10px'
+                                },
+                            }}
+                        >
+                            <ListItemIcon
+                                sx={{
+                                    minWidth: 0,
+                                    mr: open ? 3 : 'auto',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Logout sx={{ fontSize: 30 }}/>
+                            </ListItemIcon>
+
+                            <ListItemText
+                                primary="Logout"
+                                sx={{
+                                    opacity: open ? 1 : 0,
+                                    color: '#FFFBD8',
+                                }}
+                            />
+                        </ListItemButton>
+                    </Tooltip>
+                </ListItem>
             </List>
+
         </Drawer>
     );
 }

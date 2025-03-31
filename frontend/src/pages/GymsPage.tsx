@@ -1,16 +1,11 @@
-import Sidebar from "../components/navigation/Sidebar.tsx";
+import {Typography} from "@mui/material";
 
 
-export default function HomePage() {
+export default function GymsPage() {
 
     return (
         <>
-            <div style={{ display: 'flex' }}>
-                <Sidebar />
-                <main style={{ flexGrow: 1, padding: '1rem' }}>
-                    gyms
-                </main>
-            </div>
+            <Typography> gyms </Typography>
         </>
     )
 }

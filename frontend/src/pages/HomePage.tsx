@@ -1,16 +1,10 @@
-import Sidebar from "../components/navigation/Sidebar.tsx";
-
+import {Typography} from "@mui/material";
 
 export default function HomePage() {
 
     return (
         <>
-            <div style={{ display: 'flex' }}>
-                <Sidebar />
-                <main style={{ flexGrow: 1, padding: '1rem' }}>
-                    home
-                </main>
-            </div>
+            <Typography> home </Typography>
         </>
     )
 }

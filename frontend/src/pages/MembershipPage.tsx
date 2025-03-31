@@ -1,16 +1,11 @@
-import Sidebar from "../components/navigation/Sidebar.tsx";
+import {Typography} from "@mui/material";
 
 
-export default function HomePage() {
+export default function MembershipsPage() {
 
     return (
         <>
-            <div style={{ display: 'flex' }}>
-                <Sidebar />
-                <main style={{ flexGrow: 1, padding: '1rem' }}>
-                    memberships
-                </main>
-            </div>
+            <Typography> memberships </Typography>
         </>
     )
 }
