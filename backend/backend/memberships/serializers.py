@@ -22,7 +22,7 @@ class MembershipTypeSerializer(serializers.ModelSerializer):
         return value
 
 class UserMembershipSerializer(serializers.ModelSerializer):
-
+    membership_type = MembershipTypeSerializer(read_only=True)
     class Meta:
         model = UserMembership
         fields = [

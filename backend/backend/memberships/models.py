@@ -6,7 +6,7 @@ class MembershipType(models.Model):
     duration_days = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.TextField(blank=True)
-    photo_path = models.CharField(blank=True, max_length=100, default=None)
+    photo_path = models.ImageField(default='mtype-standard.png', blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.duration_days} dni) – {self.price} zł"
