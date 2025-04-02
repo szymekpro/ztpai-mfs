@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Gym
 
-# RegisterPage your models here.
+# Register your models here.
+
+admin.site.register(Gym)

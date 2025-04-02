@@ -6,7 +6,7 @@ class Gym(models.Model):
     city = models.CharField(max_length=100)
     address = models.TextField()
     description = models.TextField(blank=True, null=True)
-    photo_path = models.CharField(blank=True, max_length=100, default=None)
+    photo_path = models.ImageField(default='gym-standard.png', blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.city})"
@@ -24,7 +24,7 @@ class Trainer(models.Model):
 
     @property
     def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.last_name} {self.first_name}"
 
 
 class TrainerAvailability(models.Model):

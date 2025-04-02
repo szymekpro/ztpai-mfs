@@ -1,11 +1,8 @@
-import {Box} from '@mui/material';
-import {JSX, ReactNode} from "react";
+import {Box, Typography} from "@mui/material";
+import GymDetailsCard from "./GymDetailsCard";
 
-type Props = {
-    children: ReactNode;
-};
 
-export default function MembershipsBox({ children }: Props): JSX.Element {
+export default function GymDetails() {
     return (
         <Box sx={{
             display: 'flex',
@@ -16,7 +13,14 @@ export default function MembershipsBox({ children }: Props): JSX.Element {
             height: 'auto',
             padding: 2,
         }}>
-            {children}
+            <Typography variant='h5'>
+                Gym Details
+            </Typography>
+
+            <GymDetailsCard>
+
+            </GymDetailsCard>
+
         </Box>
     )
 }

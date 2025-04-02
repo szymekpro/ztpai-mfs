@@ -4,12 +4,15 @@ import RegisterPage from "./pages/RegisterPage.tsx"
 import HomePage from "./pages/HomePage.tsx"
 import MembershipPage from "./pages/MembershipPage.tsx"
 import GymsPage from "./pages/GymsPage.tsx"
+import GymDetails from "./components/gyms/GymDetails.tsx"
 import NotFoundPage from "./pages/NotFoundPage.tsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.tsx";
 import PaymentsPage from "./pages/PaymentsPage.tsx";
 import MainAppLayout from "./components/layouts/MainAppLayout.tsx";
 import GuestPage from "./pages/GuestPage.tsx"
 import GuestAppLayout from "./components/layouts/GuestAppLayout.tsx";
+import WorkoutsPage from "./pages/WorkoutsPage.tsx";
+import TrainersPage from "./pages/TrainersPage.tsx";
 
 function Logout () {
   localStorage.clear();
@@ -38,7 +41,10 @@ function App() {
             <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
             <Route path="/memberships" element={<ProtectedRoute><MembershipPage /></ProtectedRoute>} />
             <Route path="/gyms" element={<ProtectedRoute><GymsPage /></ProtectedRoute>} />
+            <Route path="/gyms/:id" element={<ProtectedRoute><GymDetails /></ProtectedRoute>} />
             <Route path="/payments" element={<ProtectedRoute><PaymentsPage /></ProtectedRoute>} />
+            <Route path="/trainers" element={<ProtectedRoute><TrainersPage /></ProtectedRoute>} />
+            <Route path="/workouts" element={<ProtectedRoute><WorkoutsPage /></ProtectedRoute>} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />}></Route>

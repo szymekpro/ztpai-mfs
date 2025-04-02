@@ -5,17 +5,21 @@ import { Outlet } from 'react-router-dom';
 
 export default function MainAppLayout() {
     return (
-        <Box sx={{ display: 'flex', margin: 0,}}>
+        <Box
+            sx={{
+                display: 'flex',
+                minHeight: '100vh',
+                overflow: 'auto',
+                backgroundColor: '#ece9e9',
+            }}
+        >
             <Sidebar />
             <Box
                 component="main"
                 sx={{
-                    width: '100%',
-                    minHeight: '100vh',
-                    backgroundColor: '#ece9e9',
                     flexGrow: 1,
+                    width: '100%',
                     p: 2,
-                    margin: 0,
                 }}
             >
                 <Outlet />
@@ -23,3 +27,4 @@ export default function MainAppLayout() {
         </Box>
     );
 }
+

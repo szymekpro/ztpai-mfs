@@ -15,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import HomeIcon from '@mui/icons-material/Home';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
-import {FitnessCenter, CardMembership, Logout} from '@mui/icons-material';
+import {FitnessCenter, CardMembership, Logout, Rowing, Sports} from '@mui/icons-material';
 import { NavLink, useLocation} from 'react-router-dom';
 
 
@@ -90,6 +90,8 @@ export default function Sidebar() {
                 {[
                     { text: 'Home', icon: <HomeIcon sx={iconStyle}/> , to: "/home"},
                     { text: 'Memberships', icon: <CardMembership sx={iconStyle}/>, to: "/memberships" },
+                    { text: 'Workouts', icon: <Rowing sx={iconStyle}/>, to: "/workouts" },
+                    { text: 'Trainers', icon: <Sports sx={iconStyle}/>, to: "/trainers" },
                     { text: 'Our Gyms', icon: <FitnessCenter sx={iconStyle}/>, to: "/gyms" },
                     { text: 'Payments', icon: <CreditCardIcon sx={iconStyle}/>, to: "/payments" },
                 ].map(({ text, icon, to }) => {
