@@ -10,7 +10,7 @@ class GymSerializer(serializers.ModelSerializer):
             'city',
             'address',
             'description',
-            'photo_path',
+            'photo',
         ]
         read_only_fields = [
             'id'
@@ -23,10 +23,6 @@ class GymSerializer(serializers.ModelSerializer):
             })
         return data
 
-    def validate_photo_path(self, value):
-        if value and not value.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-            raise serializers.ValidationError("Photo path must end with .jpg, .jpeg, .png or .webp")
-        return value
 
 class TrainerSerializer(serializers.ModelSerializer):
     full_name = serializers.ReadOnlyField()
@@ -39,18 +35,13 @@ class TrainerSerializer(serializers.ModelSerializer):
             'last_name',
             'gym',
             'bio',
-            'photo_path',
+            'photo',
             'full_name',
         ]
         read_only_fields = [
             'id',
             'full_name'
         ]
-
-    def validate_photo_path(self, value):
-        if value and not value.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-            raise serializers.ValidationError("Photo path must end with .jpg, .jpeg, .png or .webp")
-        return value
 
 class TrainerAvailabilitySerializer(serializers.ModelSerializer):
 

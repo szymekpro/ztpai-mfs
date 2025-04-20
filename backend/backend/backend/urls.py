@@ -48,11 +48,8 @@ urlpatterns = [
 
     path('api/', include(user_urls)),
     path('api/', include(user_router.urls)),
-
     path('api/', include(gyms_router.urls)),
-
     path('api/', include(memberships_router.urls)),
-
     path('api/', include(trainings_router.urls)),
 
 ]
