@@ -76,6 +76,14 @@ REST_FRAMEWORK = {
     ],
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your Gym API',
+    'DESCRIPTION': 'API Documentation for user gym management system.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
