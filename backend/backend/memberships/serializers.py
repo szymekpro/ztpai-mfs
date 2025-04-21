@@ -16,13 +16,12 @@ class MembershipTypeSerializer(serializers.ModelSerializer):
             'id'
         ]
 
-    def validate_photo_path(self, value):
-        if value and not value.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-            raise serializers.ValidationError("Photo path must end with .jpg, .jpeg, .png or .webp")
-        return value
 
 class UserMembershipSerializer(serializers.ModelSerializer):
-    membership_type = MembershipTypeSerializer(read_only=True)
+    membership_type = serializers.PrimaryKeyRelatedField(
+        queryset=MembershipType.objects.all()
+    )
+
     class Meta:
         model = UserMembership
         fields = [
@@ -33,12 +32,7 @@ class UserMembershipSerializer(serializers.ModelSerializer):
             'end_date',
             'is_active',
         ]
-        read_only_fields = [
-            'id',
-        ]
+        read_only_fields = ['id', 'user']
 
-    def validate_photo_path(self, value):
-        if value and not value.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
-            raise serializers.ValidationError("Photo path must end with .jpg, .jpeg, .png or .webp")
-        return value
+
 
