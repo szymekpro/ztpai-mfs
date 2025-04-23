@@ -1,6 +1,12 @@
-import {Box, TextField, Button, MenuItem, Select, InputLabel, FormControl, SelectChangeEvent} from "@mui/material";
+import {
+    Box, Button, MenuItem, Select, InputLabel,
+    FormControl, SelectChangeEvent, TextField, ToggleButton, ToggleButtonGroup, Typography
+} from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useEffect, useState } from "react";
 import api from "../../api/axiosApi.ts";
+import dayjs, { Dayjs } from 'dayjs';
+import TrainingsCard from "./TrainingsCard.tsx";
 
 interface Gym {
     id: number;
@@ -22,8 +28,6 @@ interface Trainer {
 interface FormValues {
     trainer: string;
     gym: string;
-    start_time: string;
-    end_time: string;
     status: string;
     description: string;
 }
@@ -31,15 +35,20 @@ interface FormValues {
 export default function AddTrainingForm() {
     const [trainers, setTrainers] = useState<Trainer[]>([]);
     const [gyms, setGyms] = useState<Gym[]>([]);
+    const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+    const [selectedHour, setSelectedHour] = useState<string | null>(null);
 
     const [formData, setFormData] = useState<FormValues>({
         trainer: '',
         gym: '',
-        start_time: '',
-        end_time: '',
         status: 'scheduled',
         description: ''
     });
+
+    const availableHours = [
+        "06:00", "07:00", "08:00", "09:00",
+        "10:00", "11:00", "12:00", "13:00", "14:00"
+    ];
 
     useEffect(() => {
         api.get('api/trainers/').then(res => setTrainers(res.data));
@@ -55,30 +64,56 @@ export default function AddTrainingForm() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        api.post('api/trainings/', formData)
+
+        if (!selectedDate || !selectedHour) {
+            alert("Please select both date and time.");
+            return;
+        }
+
+        const combinedStart = dayjs(`${selectedDate.format("YYYY-MM-DD")}T${selectedHour}`);
+        const combinedEnd = combinedStart.add(1, 'hour');
+
+        api.post('api/trainings/', {
+            ...formData,
+            start_time: combinedStart.toISOString(),
+            end_time: combinedEnd.toISOString()
+        })
             .then(() => {
                 alert("Training added!");
                 setFormData({
                     trainer: '',
                     gym: '',
-                    start_time: '',
-                    end_time: '',
                     status: 'scheduled',
                     description: ''
                 });
+                setSelectedDate(null);
+                setSelectedHour(null);
             })
             .catch(err => console.error(err));
     };
 
     return (
+        <TrainingsCard>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>
+                    Schedule new workout with your trainer:
+                </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{
             display: 'flex',
             flexDirection: 'column',
+            alignItems: 'center',
             gap: 2,
             maxWidth: 500,
-            ml: 8,
+            minWidth: 500,
         }}>
-            <FormControl fullWidth required>
+            <FormControl fullWidth required sx={{mt: 2}}>
                 <InputLabel>Trainer</InputLabel>
                 <Select name="trainer" value={formData.trainer} onChange={handleChange}>
                     {trainers.map((t) => (
@@ -100,30 +135,63 @@ export default function AddTrainingForm() {
                 </Select>
             </FormControl>
 
-            <TextField
-                label="Start Time"
-                type="datetime-local"
-                name="start_time"
-                value={formData.start_time}
-                onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
-                fullWidth
-                required
+            <DatePicker
+                label="Select Date"
+                value={selectedDate}
+                onChange={(newValue) => setSelectedDate(newValue)}
+                slotProps={{
+                    textField: {
+                        fullWidth: true,
+                        required: true,
+                    },
+                }}
             />
 
-            <TextField
-                label="End Time"
-                type="datetime-local"
-                name="end_time"
-                value={formData.end_time}
-                onChange={handleChange}
-                InputLabelProps={{ shrink: true }}
-                fullWidth
-                required
-            />
+            {selectedDate && (
+                <Box>
+                    <ToggleButtonGroup
+                        value={selectedHour}
+                        exclusive
+                        onChange={(e, newValue) => {
+                            if (newValue !== null) setSelectedHour(newValue);
+                        }}
+                        sx={{
+                            flexWrap: 'wrap',
+                            gap: 1,
+                            justifyContent: 'center',
+                            '& .MuiToggleButtonGroup-grouped': {
+                                borderRadius: 2,
+                                margin: '4px',
+                                border: '1px solid #ccc',
+                                minWidth: '60px',
+                                height: '36px',
+                                fontWeight: 600,
+                                backgroundColor: '#ece9e9',
+                                color: '#404042',
+                                '&.Mui-selected': {
+                                    backgroundColor: '#1d7ecd',
+                                    color: '#fff',
+                                    borderColor: '#1d7ecd',
+                                },
+                                '&:hover': {
+                                    backgroundColor: '#d5e8f7',
+                                },
+                            }
+                        }}
+                    >
+                        {availableHours.map((hour) => (
+                            <ToggleButton key={hour} value={hour}>
+                                {hour}
+                            </ToggleButton>
+                        ))}
+                    </ToggleButtonGroup>
+
+                </Box>
+            )}
+
 
             <TextField
-                label="Description"
+                label="Notes"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -132,9 +200,19 @@ export default function AddTrainingForm() {
                 fullWidth
             />
 
-            <Button type="submit" variant="contained" color="primary">
-                Add Training
+            <Button type="submit" variant="contained" color="primary" sx={{
+                mt: 2,
+                backgroundColor: '#1d7ecd',
+                height: 40,
+                width: 300,
+                '&:hover': {
+                    backgroundColor: '#1d7ecd',
+                },
+            }}>
+                Schedule Training
             </Button>
         </Box>
+            </Box>
+        </TrainingsCard>
     );
 }

@@ -23,26 +23,6 @@ class GymSerializer(serializers.ModelSerializer):
             })
         return data
 
-
-class TrainerSerializer(serializers.ModelSerializer):
-    full_name = serializers.ReadOnlyField()
-
-    class Meta:
-        model = Trainer
-        fields = [
-            'id',
-            'first_name',
-            'last_name',
-            'gym',
-            'bio',
-            'photo',
-            'full_name',
-        ]
-        read_only_fields = [
-            'id',
-            'full_name'
-        ]
-
 class TrainerAvailabilitySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -61,3 +41,26 @@ class TrainerAvailabilitySerializer(serializers.ModelSerializer):
         if start and end and start >= end:
             raise serializers.ValidationError("Start time must be before end time.")
         return data
+
+
+class TrainerSerializer(serializers.ModelSerializer):
+    full_name = serializers.ReadOnlyField()
+    availability = TrainerAvailabilitySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Trainer
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'gym',
+            'bio',
+            'photo',
+            'full_name',
+            'availability',
+        ]
+        read_only_fields = [
+            'id',
+            'full_name',
+        ]
+
