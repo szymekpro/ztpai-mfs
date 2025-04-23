@@ -11,10 +11,19 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 import pytest
 from rest_framework.test import APIClient
+import tempfile
+from django.test.utils import override_settings
+
 
 @pytest.fixture
 def api_client():
     return APIClient()
+
+@pytest.fixture(autouse=True, scope='function')
+def use_temp_media_root():
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        with override_settings(MEDIA_ROOT=tmpdirname):
+            yield
 
 @pytest.fixture
 def test_user():
@@ -30,24 +39,40 @@ def authenticated_client(api_client, test_user):
     api_client.force_authenticate(user=test_user)
     return api_client
 
+def generate_dummy_image(name="standard.jpg", format="JPEG"):
+    image = Image.new("RGB", (100, 100), color="blue")
+    image_io = io.BytesIO()
+    image.save(image_io, format=format)
+    image_io.seek(0)
+
+    return SimpleUploadedFile(
+        name=name,
+        content=image_io.read(),
+        content_type=f"image/{format.lower()}"
+    )
+
 @pytest.fixture
 def sample_gym():
+    mock_image = generate_dummy_image()
+
     return Gym.objects.create(
         name="FitZone",
         city="Warsaw",
         address="Main St 123",
         description="Description",
-        photo="gym-standard.png",
+        photo=mock_image,
     )
 
 @pytest.fixture
 def sample_trainer(sample_gym):
+    mock_image = generate_dummy_image()
+
     return Trainer.objects.create(
         first_name="Anna",
         last_name="Nowak",
         gym=sample_gym,
         bio="sample bio",
-        photo="trainer-standard.png",
+        photo=mock_image,
     )
 
 @pytest.fixture
@@ -84,16 +109,9 @@ def test_post_gym_invalid(authenticated_client):
 
 @pytest.mark.django_db
 def test_patch_gym(authenticated_client, sample_gym):
-    image = Image.new("RGB", (100, 100), color="red")
-    image_io = io.BytesIO()
-    image.save(image_io, format="JPEG")
-    image_io.seek(0)
 
-    mock_image = SimpleUploadedFile(
-        name="mock.jpg",
-        content=image_io.read(),
-        content_type="image/jpeg"
-    )
+
+    mock_image = generate_dummy_image()
 
     response = authenticated_client.patch(
         f"/api/gyms/{sample_gym.id}/",
@@ -122,16 +140,7 @@ def test_get_trainers(authenticated_client, sample_trainer):
 
 @pytest.mark.django_db
 def test_post_trainer(authenticated_client, sample_gym):
-    image = Image.new("RGB", (100, 100), color="blue")
-    image_io = io.BytesIO()
-    image.save(image_io, format="JPEG")
-    image_io.seek(0)
-
-    mock_image = SimpleUploadedFile(
-        name="trainer.jpg",
-        content=image_io.read(),
-        content_type="image/jpeg"
-    )
+    mock_image = generate_dummy_image()
 
     response = authenticated_client.post(
         "/api/trainers/",

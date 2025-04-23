@@ -11,10 +11,18 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 import pytest
 from rest_framework.test import APIClient
+import tempfile
+from django.test.utils import override_settings
 
 @pytest.fixture
 def api_client():
     return APIClient()
+
+@pytest.fixture(autouse=True, scope='function')
+def use_temp_media_root():
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        with override_settings(MEDIA_ROOT=tmpdirname):
+            yield
 
 @pytest.fixture
 def test_user():
@@ -30,14 +38,28 @@ def authenticated_client(api_client, test_user):
     api_client.force_authenticate(user=test_user)
     return api_client
 
+def generate_dummy_image(name="standard.jpg", format="JPEG"):
+    image = Image.new("RGB", (100, 100), color="blue")
+    image_io = io.BytesIO()
+    image.save(image_io, format=format)
+    image_io.seek(0)
+
+    return SimpleUploadedFile(
+        name=name,
+        content=image_io.read(),
+        content_type=f"image/{format.lower()}"
+    )
+
 @pytest.fixture
 def sample_membership_type():
+    mock_image = generate_dummy_image()
+
     return MembershipType.objects.create(
         name="Standard",
         duration_days=30,
         price=99.99,
         description="Basic gym access",
-        photo_path="mtype-standard.png"
+        photo=mock_image
     )
 
 @pytest.fixture
@@ -62,26 +84,18 @@ def test_get_membership_types(authenticated_client, sample_membership_type):
 
 @pytest.mark.django_db
 def test_post_membership_type(authenticated_client):
-    image = Image.new("RGB", (100, 100), color="green")
-    image_io = io.BytesIO()
-    image.save(image_io, format="JPEG")
-    image_io.seek(0)
 
-    mock_image = SimpleUploadedFile(
-        name="standard.jpg",
-        content=image_io.read(),
-        content_type="image/jpeg"
-    )
+    mock_image = generate_dummy_image()
 
     payload = {
         "name": "Premium",
         "duration_days": 90,
         "price": "199.99",
         "description": "Full gym + classes",
-        "photo_path": mock_image
+        "photo": mock_image
     }
-
     response = authenticated_client.post("/api/membership-types/", data=payload, format='multipart')
+    print(response.data)
     assert response.status_code == 201
     assert MembershipType.objects.filter(name="Premium").exists()
 
@@ -127,14 +141,15 @@ def test_delete_membership_type_not_found(authenticated_client):
 def test_get_user_memberships(authenticated_client, sample_user_membership):
     response = authenticated_client.get("/api/user-memberships/")
     assert response.status_code == 200
-    assert response.data[0]["membership_type"] == sample_user_membership.membership_type.id
+    assert response.data[0]["membership_type"]["id"] == sample_user_membership.membership_type.id
 
 
 @pytest.mark.django_db
 def test_post_user_membership(authenticated_client, test_user, sample_membership_type):
     payload = {
         "user": test_user.id,
-        "membership_type": sample_membership_type.id,
+        "membership_type": sample_membership_type,
+        "membership_type_id": sample_membership_type.id,
         "start_date": "2024-02-01",
         "end_date": "2024-03-01",
         "is_active": True
@@ -154,7 +169,8 @@ def test_post_user_membership_invalid(authenticated_client):
 def test_put_user_membership(authenticated_client, sample_user_membership, test_user):
     payload = {
         "user": test_user.id,
-        "membership_type": sample_user_membership.membership_type.id,
+        "membership_type": sample_user_membership.membership_type,
+        "membership_type_id": sample_user_membership.membership_type.id,
         "start_date": "2024-01-01",
         "end_date": "2024-02-01",
         "is_active": False

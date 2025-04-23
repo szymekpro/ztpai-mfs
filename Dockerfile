@@ -16,4 +16,4 @@ RUN pip install -r backend/backend/requirements.txt && apk del .tmp
 COPY backend /backend
 WORKDIR /backend
 
-CMD ["sh", "-c", "python manage.py makemigrations users && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py runserver 0.0.0.0:8000"]

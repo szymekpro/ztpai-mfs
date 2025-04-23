@@ -13,7 +13,7 @@ interface UserMembership {
         description: string;
         duration_days: number;
         price: string;
-        photo_path: string;
+        photo: string;
     };
 }
 
@@ -64,7 +64,7 @@ export default function MembershipCard() {
                 >
                     <Box sx={{ flexShrink: 0, marginRight: 2 }}>
                         <img
-                            src={item.membership_type.photo_path}
+                            src={item.membership_type.photo}
                             alt={item.membership_type.name}
                             loading="lazy"
                             style={{ width: '150px', height: 'auto', borderRadius: '8px' }}

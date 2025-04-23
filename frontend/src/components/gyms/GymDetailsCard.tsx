@@ -9,7 +9,7 @@ interface Gym {
     city: string;
     address: string;
     description: string;
-    photo_path: string;
+    photo: string;
 }
 
 export default function GymDetailsCard() {
@@ -56,10 +56,10 @@ export default function GymDetailsCard() {
                     </Typography>
                 </Box>
 
-                {gym.photo_path && (
+                {gym.photo && (
                     <Box
                         component="img"
-                        src={gym.photo_path}
+                        src={gym.photo}
                         alt={gym.name}
                         sx={{
                             width: '100%',
