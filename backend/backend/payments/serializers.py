@@ -14,3 +14,13 @@ class PaymentsSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'id'
         ]
+
+
+class PaymentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ["status", "description"]
+        extra_kwargs = {
+            "status": {"required": False},
+            "description": {"required": False},
+        }
