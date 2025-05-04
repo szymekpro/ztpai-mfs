@@ -33,6 +33,8 @@ from memberships.routers import router as memberships_router
 
 from trainings.routers import router as trainings_router
 
+from payments.routers import router as payments_router
+
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
@@ -51,6 +53,7 @@ urlpatterns = [
     path('api/', include(gyms_router.urls)),
     path('api/', include(memberships_router.urls)),
     path('api/', include(trainings_router.urls)),
+    path('api/', include(payments_router.urls)),
 
 ]
 

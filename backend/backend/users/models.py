@@ -25,6 +25,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30, blank=True, null=True)
     last_name = models.CharField(max_length=30, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True,  null=True)
+    street = models.CharField(max_length=20, blank=True, null=True)
+    street_number = models.CharField(max_length=20, blank=True, null=True)
+    city = models.CharField(max_length=20, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -44,6 +48,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    @property
+    def full_address(self):
+        return f"{self.street} {self.street_number}, {self.postal_code} {self.city}"
 
     def save(self, *args, **kwargs):
         if self.role == 'admin':

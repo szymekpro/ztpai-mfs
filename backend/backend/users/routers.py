@@ -1,5 +1,5 @@
 from rest_framework.routers import DefaultRouter # type: ignore
-from .views.user_view import CreateUserView, UserViewSet
+from .views.user_view import UserViewSet
 
 router = DefaultRouter()
 

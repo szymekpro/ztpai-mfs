@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -6,6 +7,7 @@ from drf_spectacular.utils import (
     extend_schema, extend_schema_view, OpenApiResponse
 )
 from ..models import MembershipType, UserMembership
+from payments.models import Payment
 from ..serializers import MembershipTypeSerializer, UserMembershipSerializer
 
 
@@ -85,4 +87,17 @@ class UserMembershipViewSet(ModelViewSet):
         return UserMembership.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        user_membership = serializer.save(user=self.request.user)
+        amount = user_membership.membership_type.price
+        description = f"Payment for membership: {user_membership.membership_type.name}"
+        content_type = ContentType.objects.get_for_model(user_membership)
+
+        Payment.objects.create(
+            user=self.request.user,
+            amount=amount,
+            status="pending",
+            description=description,
+            content_type=content_type,
+            object_id=user_membership.id,
+        )
+
