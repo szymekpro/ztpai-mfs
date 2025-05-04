@@ -13,6 +13,7 @@ import GuestPage from "./pages/GuestPage.tsx"
 import GuestAppLayout from "./components/layouts/GuestAppLayout.tsx";
 import WorkoutsPage from "./pages/WorkoutsPage.tsx";
 import TrainersPage from "./pages/TrainersPage.tsx";
+import RegisterForm from "./components/auth/RegisterForm.tsx";
 
 function Logout () {
   localStorage.clear();
@@ -34,7 +35,9 @@ function App() {
        </Route>
 
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterAndLogout />} />
+        {/*<Route path="/register" element={<RegisterAndLogout />} />*/}
+        <Route path="/register" element={<RegisterForm />} />
+
         <Route path="/logout" element={<Logout />} />
 
         <Route element={<MainAppLayout />}>

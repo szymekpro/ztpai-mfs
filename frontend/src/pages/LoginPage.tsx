@@ -1,5 +1,5 @@
-import Form from "../components/auth/Form"
+import LoginForm from "../components/auth/LoginForm";
 
 export default function LoginPage() {
-    return <Form route="/api/token/" method="login" />
+  return <LoginForm />;
 }
