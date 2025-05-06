@@ -1,4 +1,3 @@
-import {Typography} from "@mui/material";
 import PaymentsList from "../payments/PaymentsList.tsx"
 
 

@@ -13,6 +13,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import dayjs from "dayjs";
 import api from "../api/axiosApi";
 import EditPaymentDialog from "./EditPaymentDialog.tsx";
+import {useUserRole} from "../hooks/useUserRole.ts";
 
 interface Payment {
   id: number;
@@ -27,6 +28,8 @@ export default function PaymentsList() {
   const [loading, setLoading] = useState(true);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+
+  const { role, isMember } = useUserRole();
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -125,13 +128,15 @@ export default function PaymentsList() {
         </Grid>
       )}
 
-      <EditPaymentDialog
+      {!isMember && (
+        <EditPaymentDialog
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
         onSubmit={handlePatchSubmit}
         currentStatus={selectedPayment?.status || ""}
         currentDescription={selectedPayment?.description || ""}
-      />
+        />
+      )}
     </Box>
   );
 }

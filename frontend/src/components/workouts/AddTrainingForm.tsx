@@ -6,7 +6,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useEffect, useState } from "react";
 import api from "../../api/axiosApi.ts";
 import dayjs, { Dayjs } from 'dayjs';
-import TrainingsCard from "./TrainingsCard.tsx";
+import TrainingFormCard from "./TrainingFormCard.tsx";
 
 interface Gym {
     id: number;
@@ -51,7 +51,6 @@ export default function AddTrainingForm() {
         "10:00", "11:00", "12:00", "13:00", "14:00"
     ];
 
-
     useEffect(() => {
         api.get('api/trainers/').then(res => setTrainers(res.data));
         api.get('api/gyms/').then(res => setGyms(res.data));
@@ -66,12 +65,20 @@ export default function AddTrainingForm() {
             .catch(err => console.error("Failed to fetch booked hours:", err));
     }, [formData.trainer, selectedDate]);
 
+
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
     ) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
+
+    const storedGym = localStorage.getItem("selectedGymObj");
+    const gym: Gym | null = storedGym ? JSON.parse(storedGym) : null;
+
+    const filteredTrainers = gym
+        ? trainers.filter((t) => Number(t.gym) === Number(gym.id)) : [];
+
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -84,14 +91,11 @@ export default function AddTrainingForm() {
         const combinedStart = dayjs(`${selectedDate.format("YYYY-MM-DD")}T${selectedHour}`);
         const combinedEnd = combinedStart.add(1, 'hour');
 
-        const gymId = localStorage.getItem("selectedGymId");
-        const gymName = localStorage.getItem("selectedGymName");
-
-        if (!gymId || !gymName) {
+        if (!gym) {
             alert("Please select an active gym.");
             return;
         }
-        formData.gym = gymId;
+        formData.gym = gym.id.toString();
 
         api.post('api/trainings/', {
             ...formData,
@@ -113,7 +117,7 @@ export default function AddTrainingForm() {
     };
 
     return (
-        <TrainingsCard>
+        <TrainingFormCard>
             <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -129,14 +133,14 @@ export default function AddTrainingForm() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 2,
+            gap: 4,
             maxWidth: 500,
             minWidth: 500,
         }}>
             <FormControl fullWidth required sx={{mt: 2}}>
                 <InputLabel>Trainer</InputLabel>
                 <Select name="trainer" value={formData.trainer} onChange={handleChange}>
-                    {trainers.map((t) => (
+                    {filteredTrainers.map((t) => (
                         <MenuItem key={t.id} value={t.id}>
                             {t.first_name} {t.last_name}
                         </MenuItem>
@@ -222,6 +226,6 @@ export default function AddTrainingForm() {
             </Button>
         </Box>
             </Box>
-        </TrainingsCard>
+        </TrainingFormCard>
     );
 }

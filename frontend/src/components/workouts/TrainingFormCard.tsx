@@ -6,7 +6,7 @@ type Props = {
 };
 
 
-export default function TrainingsCard({ children }: Props): JSX.Element {
+export default function TrainingFormCard({ children }: Props): JSX.Element {
     return (
         <Paper
             elevation={3}
@@ -19,10 +19,9 @@ export default function TrainingsCard({ children }: Props): JSX.Element {
                 borderRadius: 2,
                 backgroundColor: '#f5f5f5',
                 marginBottom: 2,
-                width: '100%',
+                width: '80%',
                 minHeight: 600,
                 maxHeight: '75vh',
-                overflowY: 'scroll',
             }}
         >
             {children}

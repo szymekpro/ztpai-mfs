@@ -27,8 +27,6 @@ export default function Sidebar() {
     const iconStyle = { fontSize: 30};
     const switchIconStyle = { fontSize: 30, color: '#FFFBD8'};
 
-    const gymName = localStorage.getItem("selectedGymName");
-
     const location = useLocation();
 
     const toggleDrawer = () => setOpen((prev) => !prev);
@@ -73,17 +71,6 @@ export default function Sidebar() {
                     {open ? <ChevronLeftIcon sx={switchIconStyle} /> : <MenuIcon sx={switchIconStyle} />}
                 </IconButton>
 
-                {open && (
-                    <Box
-                        sx={{
-                            color: '#FFFBD8',
-                            fontWeight: 'bold',
-                            fontSize: '1.1rem',
-                        }}
-                    >
-                        <img src="/logo.png" alt="Logo" style={{ height: '128px', objectFit: 'contain' }} />
-                    </Box>
-                )}
             </Box>
 
             <Divider />
@@ -94,8 +81,8 @@ export default function Sidebar() {
                     { text: 'Memberships', icon: <CardMembership sx={iconStyle}/>, to: "/memberships" },
                     { text: 'Workouts', icon: <Rowing sx={iconStyle}/>, to: "/workouts" },
                     { text: 'Trainers', icon: <Sports sx={iconStyle}/>, to: "/trainers" },
-                    { text: gymName || 'Gym: Not selected', icon: <FitnessCenter sx={iconStyle}/>, to: "/gyms" },
                     { text: 'Payments', icon: <CreditCardIcon sx={iconStyle}/>, to: "/payments" },
+                    { text: 'Gyms', icon: <FitnessCenter sx={iconStyle}/>, to: "/gyms" },
                 ].map(({ text, icon, to }) => {
                     const isActive = location.pathname === to;
 

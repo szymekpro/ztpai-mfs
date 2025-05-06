@@ -42,14 +42,9 @@ class PaymentViewSet(ModelViewSet):
         return PaymentsSerializer
 
     def partial_update(self, request, *args, **kwargs):
-        payment = self.get_object()
-        user = request.user
+        user = self.request.user
+        if user.role == "member":
+            return Response({"detail": "Members are not allowed to modify payments."}, status=status.HTTP_403_FORBIDDEN)
 
-        if user.role == "admin" or payment.user == user:
-            return super().partial_update(request, *args, **kwargs)
+        return super().partial_update(request, *args, **kwargs)
 
-        elif user.role == "employee":
-            self.serializer_class = PaymentUpdateSerializer
-            return super().partial_update(request, *args, **kwargs)
-
-        return Response({"detail": "Not authorized."}, status=status.HTTP_403_FORBIDDEN)
