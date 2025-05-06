@@ -40,7 +40,12 @@ export default function GymListCard({ gyms }: Props) {
                     {gymsInCity.map((gym) => (
                         <Paper
                             key={gym.id}
-                            onClick={() => navigate(`/gyms/${gym.id}`)}
+                            onClick={() => {
+                                localStorage.setItem("selectedGymId", gym.id.toString());
+                                localStorage.setItem("selectedGymName", gym.name);
+                                navigate(`/gyms/${gym.id}`);
+                            }}
+
                             sx={{
                                 display: 'flex',
                                 alignItems: 'center',

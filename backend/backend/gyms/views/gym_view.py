@@ -1,10 +1,16 @@
 # gyms/views.py
+from datetime import datetime
+
+from django.utils.timezone import localtime
+from drf_spectacular.types import OpenApiTypes
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse
 from ..models import Gym, Trainer, TrainerAvailability
 from ..serializers import GymSerializer, TrainerSerializer, TrainerAvailabilitySerializer
+from trainings.models import ScheduledTraining
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -38,7 +44,9 @@ class GymViewSet(ModelViewSet):
     @extend_schema(
         summary="Unique cities",
         description="Returns a list of unique cities where gyms are located.",
-        responses={200: OpenApiResponse(description="List of cities (strings) as an array")}
+        responses={
+            200: OpenApiResponse(description="List of cities (strings) as an array")
+        }
     )
     @action(detail=False, methods=["get"], url_path="cities")
     def list_unique_cities(self, request):
@@ -75,6 +83,28 @@ class TrainerViewSet(ModelViewSet):
     queryset = Trainer.objects.all()
     serializer_class = TrainerSerializer
 
+    @extend_schema(
+        summary="Booked hours for trainer",
+        description="Returns a list of booked hour slots (e.g. '09:00') for a specific date.",
+    )
+    @action(detail=True, methods=['get'], url_path='booked-hours')
+    def booked_hours(self, request, pk=None):
+        date_str = request.GET.get('date')
+        if not date_str:
+            return Response({"error": "Missing date parameter"}, status=400)
+
+        try:
+            date = datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            return Response({"error": "Invalid date format. Example: YYYY-MM-DD"}, status=400)
+
+        trainings = ScheduledTraining.objects.filter(
+            trainer_id=pk,
+            start_time__date=date
+        )
+
+        booked_hours = [localtime(t.start_time).strftime('%H:%M') for t in trainings]
+        return Response({"booked_hours": booked_hours})
 
 @extend_schema_view(
     list=extend_schema(

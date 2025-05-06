@@ -35,6 +35,7 @@ interface FormValues {
 export default function AddTrainingForm() {
     const [trainers, setTrainers] = useState<Trainer[]>([]);
     const [gyms, setGyms] = useState<Gym[]>([]);
+    const [bookedHours, setBookedHours] = useState<string[]>([]);
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [selectedHour, setSelectedHour] = useState<string | null>(null);
 
@@ -50,10 +51,20 @@ export default function AddTrainingForm() {
         "10:00", "11:00", "12:00", "13:00", "14:00"
     ];
 
+
     useEffect(() => {
         api.get('api/trainers/').then(res => setTrainers(res.data));
         api.get('api/gyms/').then(res => setGyms(res.data));
     }, []);
+
+    useEffect(() => {
+        if (!formData.trainer || !selectedDate) return;
+
+        const dateStr = selectedDate.format('YYYY-MM-DD');
+        api.get(`/api/trainers/${formData.trainer}/booked-hours/?date=${dateStr}`)
+            .then(res => setBookedHours(res.data.booked_hours))
+            .catch(err => console.error("Failed to fetch booked hours:", err));
+    }, [formData.trainer, selectedDate]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
@@ -72,6 +83,15 @@ export default function AddTrainingForm() {
 
         const combinedStart = dayjs(`${selectedDate.format("YYYY-MM-DD")}T${selectedHour}`);
         const combinedEnd = combinedStart.add(1, 'hour');
+
+        const gymId = localStorage.getItem("selectedGymId");
+        const gymName = localStorage.getItem("selectedGymName");
+
+        if (!gymId || !gymName) {
+            alert("Please select an active gym.");
+            return;
+        }
+        formData.gym = gymId;
 
         api.post('api/trainings/', {
             ...formData,
@@ -124,17 +144,6 @@ export default function AddTrainingForm() {
                 </Select>
             </FormControl>
 
-            <FormControl fullWidth required>
-                <InputLabel>Gym</InputLabel>
-                <Select name="gym" value={formData.gym} onChange={handleChange}>
-                    {gyms.map((g) => (
-                        <MenuItem key={g.id} value={g.id}>
-                            {g.name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-
             <DatePicker
                 label="Select Date"
                 value={selectedDate}
@@ -180,7 +189,7 @@ export default function AddTrainingForm() {
                         }}
                     >
                         {availableHours.map((hour) => (
-                            <ToggleButton key={hour} value={hour}>
+                            <ToggleButton key={hour} value={hour} disabled={bookedHours.includes(hour)}>
                                 {hour}
                             </ToggleButton>
                         ))}

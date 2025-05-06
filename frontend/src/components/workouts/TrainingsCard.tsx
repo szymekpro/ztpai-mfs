@@ -20,10 +20,9 @@ export default function TrainingsCard({ children }: Props): JSX.Element {
                 backgroundColor: '#f5f5f5',
                 marginBottom: 2,
                 width: '100%',
-                height: 600,
+                minHeight: 600,
             }}
         >
-
             {children}
         </Paper>
     );

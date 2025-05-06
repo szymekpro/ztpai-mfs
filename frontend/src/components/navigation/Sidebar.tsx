@@ -27,6 +27,8 @@ export default function Sidebar() {
     const iconStyle = { fontSize: 30};
     const switchIconStyle = { fontSize: 30, color: '#FFFBD8'};
 
+    const gymName = localStorage.getItem("selectedGymName");
+
     const location = useLocation();
 
     const toggleDrawer = () => setOpen((prev) => !prev);
@@ -92,7 +94,7 @@ export default function Sidebar() {
                     { text: 'Memberships', icon: <CardMembership sx={iconStyle}/>, to: "/memberships" },
                     { text: 'Workouts', icon: <Rowing sx={iconStyle}/>, to: "/workouts" },
                     { text: 'Trainers', icon: <Sports sx={iconStyle}/>, to: "/trainers" },
-                    { text: 'Our Gyms', icon: <FitnessCenter sx={iconStyle}/>, to: "/gyms" },
+                    { text: gymName || 'Gym: Not selected', icon: <FitnessCenter sx={iconStyle}/>, to: "/gyms" },
                     { text: 'Payments', icon: <CreditCardIcon sx={iconStyle}/>, to: "/payments" },
                 ].map(({ text, icon, to }) => {
                     const isActive = location.pathname === to;
@@ -142,7 +144,6 @@ export default function Sidebar() {
                     );
                 })}
 
-                {/* Logout na dole */}
                 <ListItem disablePadding sx={{ display: 'block', mt: 'auto' }}>
                     <Tooltip title={!open ? 'Logout' : ''} placement="right">
                         <ListItemButton
