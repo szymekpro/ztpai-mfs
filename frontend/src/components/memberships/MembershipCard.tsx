@@ -1,23 +1,12 @@
 import {Box, Paper, Typography} from '@mui/material';
 import { useEffect, useState } from "react";
 import api from "../../api/axiosApi.ts";
+import UserMembership from "./UserMembershipProp.ts"
+import {useNavigate} from "react-router-dom";
 
-interface UserMembership {
-    id: number;
-    start_date: string;
-    end_date: string;
-    is_active: boolean;
-    membership_type: {
-        id: number;
-        name: string;
-        description: string;
-        duration_days: number;
-        price: string;
-        photo: string;
-    };
-}
 
 export default function MembershipCard() {
+    const navigate = useNavigate();
     const [memberships, setMemberships] = useState<UserMembership[]>([]);
 
     useEffect(() => {
@@ -50,6 +39,9 @@ export default function MembershipCard() {
                 <Paper
                     key={item.id}
                     elevation={3}
+                    onClick={() => {
+                        navigate(`/memberships/${item.id}`);
+                    }}
                     sx={{
                         display: 'flex',
                         flexDirection: 'row',
@@ -60,6 +52,12 @@ export default function MembershipCard() {
                         marginBottom: 2,
                         width: 'auto',
                         maxWidth: 800,
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                        '&:hover': {
+                            transform: 'scale(1.03)',
+                            boxShadow: 6,
+                            cursor: 'pointer',
+                        },
                     }}
                 >
                     <Box sx={{ flexShrink: 0, marginRight: 2 }}>
