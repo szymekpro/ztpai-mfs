@@ -1,6 +1,5 @@
 import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
 import LoginPage from "./pages/LoginPage.tsx"
-import RegisterPage from "./pages/RegisterPage.tsx"
 import HomePage from "./pages/HomePage.tsx"
 import MembershipPage from "./pages/MembershipPage.tsx"
 import GymsPage from "./pages/GymsPage.tsx"
@@ -20,11 +19,6 @@ function Logout () {
   return <Navigate to="/" />
 }
 
-function RegisterAndLogout () {
-    localStorage.clear();
-    return <RegisterPage />
-}
-
 function App() {
 
   return (
@@ -35,9 +29,7 @@ function App() {
        </Route>
 
         <Route path="/login" element={<LoginPage />} />
-        {/*<Route path="/register" element={<RegisterAndLogout />} />*/}
         <Route path="/register" element={<RegisterForm />} />
-
         <Route path="/logout" element={<Logout />} />
 
         <Route element={<MainAppLayout />}>

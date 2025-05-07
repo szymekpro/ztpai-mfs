@@ -13,7 +13,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../api/axiosApi";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../api/const";
-import LogoPlaceholder from "../../../public/logo-zoom.png"; // zamień na swoje logo
+import LogoPlaceholder from "../../../public/logo-zoom.png";
 
 interface LoginFormData {
   email: string;
@@ -47,28 +47,31 @@ export default function LoginForm() {
       sx={{ minHeight: "100vh", backgroundColor: "#f4f4f4" }}
     >
       <Grid item xs={11} sm={8} md={6} lg={4}>
-        <Paper elevation={3} sx={{ padding: 4, borderRadius: 2 }}>
-          <Box textAlign="center" mb={3}>
+        <Paper elevation={3} sx={{
+          padding: 4,
+          borderRadius: 2,
+          height: 600,
+          width: 400,
+        }}>
+          <Box textAlign="center" mt={4} mb={3}>
             <img
-              src={LogoPlaceholder}
-              alt="Logo"
-              style={{
-                maxWidth: 150,
-                marginBottom: 8,
-                display: "block",
-                marginLeft: "auto",
-                marginRight: "auto"
-              }}
+                src={LogoPlaceholder}
+                alt="Logo"
+                style={{
+                  maxWidth: 180,
+                  display: "block",
+                  margin: "0 auto",
+                }}
             />
-            <Typography variant="h5">Sign in</Typography>
+            <Typography variant="h5" mt={4}>Sign in</Typography>
           </Box>
 
           <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            display="flex"
-            flexDirection="column"
-            gap={2}
+              component="form"
+              onSubmit={handleSubmit(onSubmit)}
+              display="flex"
+              flexDirection="column"
+            gap={4}
           >
             <Controller
               name="email"
@@ -104,13 +107,13 @@ export default function LoginForm() {
               )}
             />
 
-            <Button type="submit" variant="contained" color="primary" disabled={loading}>
+            <Button type="submit" variant="contained" color="primary" disabled={loading} sx={{height: 60, width: 200, alignSelf: 'center'}}>
               {loading ? <CircularProgress size={24} /> : "Login"}
             </Button>
           </Box>
 
-          <Box mt={2} textAlign="center">
-            <Typography variant="body2">
+          <Box mt={4} textAlign="center">
+            <Typography variant="body1">
               Don’t have an account?{" "}
               <MuiLink component={Link} to="/register">
                 Register

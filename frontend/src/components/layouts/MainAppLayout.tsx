@@ -83,8 +83,8 @@ export default function MainAppLayout() {
                         onClick={() => setDialogOpen(true)}
                         sx={{
                             ml: 2,
-                            height: '80%',
-                            width: 128,
+                            height: '85%',
+                            width: 164,
                             backgroundColor: '#1976d2',
                             color: '#fff',
                             '&:hover': {
@@ -110,20 +110,40 @@ export default function MainAppLayout() {
             </Box>
 
             <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-                <DialogTitle>Select a gym</DialogTitle>
-                <DialogContent>
-                    <List>
-                        {gyms.map((gym) => (
-                            <ListItemButton
-                                key={gym.id}
-                                onClick={() => handleGymSelect(gym)}
-                            >
-                                {gym.name}
-                            </ListItemButton>
-                        ))}
-                    </List>
-                </DialogContent>
-            </Dialog>
+  <DialogTitle>Select a gym</DialogTitle>
+  <DialogContent>
+    <List>
+      {gyms.map((gym) => (
+        <ListItemButton
+          key={gym.id}
+          onClick={() => handleGymSelect(gym)}
+          sx={{
+            borderRadius: 2,
+            mb: 1,
+            backgroundColor: '#f0f4f8',
+            '&:hover': {
+              backgroundColor: '#dbeafe',
+            },
+            '&.Mui-selected': {
+              backgroundColor: '#c7d2fe',
+            },
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: '1rem',
+              fontWeight: 500,
+              color: '#1e293b',
+            }}
+          >
+            {gym.name}
+          </Typography>
+        </ListItemButton>
+      ))}
+    </List>
+  </DialogContent>
+</Dialog>
+
         </Box>
     );
 }

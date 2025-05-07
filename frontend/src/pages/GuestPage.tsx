@@ -20,11 +20,11 @@ export default function GuestPage() {
           p: 5,
           textAlign: "center",
           width: "100%",
-          maxWidth: 600, // zwiększona szerokość
+          maxWidth: 600, height: 400,
           borderRadius: 3,
         }}
       >
-        <Box mb={3}>
+        <Box mb={6} mt={3}>
           <img
             src={LogoPlaceholder}
             alt="Logo"
@@ -43,11 +43,19 @@ export default function GuestPage() {
           Please log in or create an account to get started.
         </Typography>
 
-        <Stack direction="row" spacing={3} justifyContent="center">
-          <Button variant="contained" size="large" component={Link} to="/login">
+        <Stack direction="row" spacing={3} justifyContent="center" sx={{
+            mt: 8,
+        }}>
+          <Button variant="contained" size="large" component={Link} to="/login" sx={{
+              width: 150,
+              height: 48,
+          }}>
             Login
           </Button>
-          <Button variant="outlined" size="large" component={Link} to="/register">
+          <Button variant="outlined" size="large" component={Link} to="/register" sx={{
+              width: 150,
+              height: 48,
+          }}>
             Register
           </Button>
         </Stack>
