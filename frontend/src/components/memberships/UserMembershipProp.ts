@@ -12,3 +12,12 @@ interface UserMembership {
         photo: string;
     };
 }
+
+interface MembershipTypeProps {
+  id: number;
+  name: string;
+  description: string;
+  price: string;
+  duration_days: number;
+  photo: string;
+}

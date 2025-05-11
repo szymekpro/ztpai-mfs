@@ -1,14 +1,10 @@
-import {Typography, Box} from "@mui/material";
+import {Typography, Box, Button} from "@mui/material";
 import MembershipDetailsCard from "./MembershipDetailsCard.tsx";
 export default function MembershipDetails() {
 
     return (
         <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-            alignItems: 'flex-start',
-            width: '100vh',
+            width: '100%',
             height: 'auto',
             padding: 2,
         }}>
@@ -17,7 +13,6 @@ export default function MembershipDetails() {
             </Typography>
 
             <MembershipDetailsCard>
-
             </MembershipDetailsCard>
 
         </Box>
