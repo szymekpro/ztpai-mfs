@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Gym, Trainer, TrainerAvailability
+from .models import Gym, Trainer, TrainerAvailability, TrainerService
+
 
 class GymSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,6 +42,17 @@ class TrainerAvailabilitySerializer(serializers.ModelSerializer):
         if start and end and start >= end:
             raise serializers.ValidationError("Start time must be before end time.")
         return data
+
+class TrainerServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TrainerService
+        fields = [
+            'id',
+            'name',
+            'description',
+            'price'
+        ]
 
 
 class TrainerSerializer(serializers.ModelSerializer):

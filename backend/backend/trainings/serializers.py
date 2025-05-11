@@ -9,6 +9,7 @@ class ScheduledTrainingSerializer(serializers.ModelSerializer):
             'user',
             'trainer',
             'gym',
+            'service_type',
             'start_time',
             'end_time',
             'status',

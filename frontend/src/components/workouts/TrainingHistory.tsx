@@ -2,14 +2,8 @@ import { Box, Typography } from "@mui/material";
 import TrainingsCard from "./TrainingsCard.tsx";
 import {useEffect, useState} from "react";
 import api from "../../api/axiosApi.ts";
+import {TrainingHistoryProps} from "GymProps.ts"
 
-interface TrainingHistoryProps {
-    id: number;
-    start_time: string;
-    end_time: string;
-    status: string;
-    description: string;
-}
 
 export default function TrainingHistory() {
     const [trainings, setTrainings] = useState<TrainingHistoryProps[]>([]);
@@ -55,6 +49,9 @@ export default function TrainingHistory() {
                             }}>
                                 <Typography variant="body1">
                                     {`Training on ${new Date(training.start_time).toLocaleString()}`}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                    {`Service: ${training.service}`}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                     {`Status: ${training.status}`}

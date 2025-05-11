@@ -7,30 +7,7 @@ import { useEffect, useState } from "react";
 import api from "../../api/axiosApi.ts";
 import dayjs, { Dayjs } from 'dayjs';
 import TrainingFormCard from "./TrainingFormCard.tsx";
-
-interface Gym {
-    id: number;
-    name: string;
-    city: string;
-    address: string;
-    photo_path: string;
-}
-
-interface Trainer {
-    id: number;
-    first_name: string;
-    last_name: string;
-    gym: Gym;
-    bio: string;
-    photo_path: string;
-}
-
-interface FormValues {
-    trainer: string;
-    gym: string;
-    status: string;
-    description: string;
-}
+import {Gym, Trainer, FormValues, TrainerServices} from "./GymProps.ts"
 
 export default function AddTrainingForm() {
     const [trainers, setTrainers] = useState<Trainer[]>([]);
@@ -38,12 +15,14 @@ export default function AddTrainingForm() {
     const [bookedHours, setBookedHours] = useState<string[]>([]);
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [selectedHour, setSelectedHour] = useState<string | null>(null);
+    const [availableServices, setAvailableServices] = useState<TrainerServices[]>([]);
 
     const [formData, setFormData] = useState<FormValues>({
         trainer: '',
         gym: '',
         status: 'scheduled',
-        description: ''
+        description: '',
+        service_type: ''
     });
 
     const availableHours = [
@@ -65,6 +44,13 @@ export default function AddTrainingForm() {
             .catch(err => console.error("Failed to fetch booked hours:", err));
     }, [formData.trainer, selectedDate]);
 
+    useEffect(() => {
+        if (!formData.trainer) return;
+
+        api.get(`/api/trainers/${formData.trainer}/available-services/`)
+            .then(res => setAvailableServices(res.data))
+            .catch(err => console.error("Failed to fetch trainer services:", err));
+    }, [formData.trainer]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
@@ -83,8 +69,8 @@ export default function AddTrainingForm() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!selectedDate || !selectedHour) {
-            alert("Please select both date and time.");
+        if (!selectedDate || !selectedHour || !formData.service_type) {
+            alert("Please select trainer, service and date with hour.");
             return;
         }
 
@@ -108,7 +94,8 @@ export default function AddTrainingForm() {
                     trainer: '',
                     gym: '',
                     status: 'scheduled',
-                    description: ''
+                    description: '',
+                    service_type: '',
                 });
                 setSelectedDate(null);
                 setSelectedHour(null);
@@ -139,13 +126,32 @@ export default function AddTrainingForm() {
         }}>
             <FormControl fullWidth required sx={{mt: 2}}>
                 <InputLabel>Trainer</InputLabel>
-                <Select name="trainer" value={formData.trainer} onChange={handleChange}>
+                <Select
+                    name="trainer"
+                    value={formData.trainer}
+                    onChange={handleChange}>
                     {filteredTrainers.map((t) => (
                         <MenuItem key={t.id} value={t.id}>
                             {t.first_name} {t.last_name}
                         </MenuItem>
                     ))}
                 </Select>
+            </FormControl>
+
+            <FormControl fullWidth required>
+                <InputLabel>Trainer's Service</InputLabel>
+                    <Select
+                        name="service_type"
+                        value={formData.service_type}
+                        onChange={handleChange}
+                        disabled={!availableServices.length}
+                    >
+                        {availableServices.map((s) => (
+                            <MenuItem key={s.id} value={s.id}>
+                                {s.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
             </FormControl>
 
             <DatePicker
@@ -213,14 +219,21 @@ export default function AddTrainingForm() {
                 fullWidth
             />
 
-            <Button type="submit" variant="contained" color="primary" sx={{
-                mt: 2,
-                backgroundColor: '#1d7ecd',
-                height: 40,
-                width: 300,
-                '&:hover': {
+            <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={
+                    !formData.trainer || !formData.service_type || !selectedDate || !selectedHour
+                }
+                sx={{
+                    mt: 2,
                     backgroundColor: '#1d7ecd',
-                },
+                    height: 40,
+                    width: 300,
+                    '&:hover': {
+                        backgroundColor: '#1d7ecd',
+                    },
             }}>
                 Schedule Training
             </Button>

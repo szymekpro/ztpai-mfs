@@ -12,11 +12,20 @@ class Gym(models.Model):
         return f"{self.name} ({self.city})"
 
 
+class TrainerService(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
+
+    def __str__(self):
+        return self.name
+
 class Trainer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE, related_name='trainers')
     bio = models.TextField(blank=True)
+    available_services = models.ManyToManyField(TrainerService, related_name="trainers")
     photo = models.ImageField(default='trainer-standard.png', blank=True)
 
     def __str__(self):
@@ -46,3 +55,4 @@ class TrainerAvailability(models.Model):
 
     def __str__(self):
         return f"{self.trainer} - {self.weekday} {self.start_time}-{self.end_time}"
+

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse
 from ..models import Gym, Trainer, TrainerAvailability
-from ..serializers import GymSerializer, TrainerSerializer, TrainerAvailabilitySerializer
+from ..serializers import GymSerializer, TrainerSerializer, TrainerAvailabilitySerializer, TrainerServiceSerializer
 from trainings.models import ScheduledTraining
 
 
@@ -105,6 +105,18 @@ class TrainerViewSet(ModelViewSet):
 
         booked_hours = [localtime(t.start_time).strftime('%H:%M') for t in trainings]
         return Response({"booked_hours": booked_hours})
+
+    @extend_schema(
+        summary="Trainer's available services for clients",
+        description="Returns a list of services that trainer offers for client.",
+    )
+    @action(detail=True, methods=['get'], url_path='available-services')
+    def available_services(self, request, pk=None):
+        trainer = self.get_object()
+        services = trainer.available_services.all()
+        serializer = TrainerServiceSerializer(services, many=True)
+        return Response(serializer.data)
+
 
 @extend_schema_view(
     list=extend_schema(
