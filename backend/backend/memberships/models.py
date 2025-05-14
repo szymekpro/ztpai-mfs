@@ -6,6 +6,7 @@ class MembershipType(models.Model):
     duration_days = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.TextField(blank=True)
+    features_description = models.TextField(blank=True)
     photo = models.ImageField(default='mtype-standard.png', blank=True)
 
     def __str__(self):

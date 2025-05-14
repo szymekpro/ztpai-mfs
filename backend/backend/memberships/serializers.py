@@ -10,6 +10,7 @@ class MembershipTypeSerializer(serializers.ModelSerializer):
             'duration_days',
             'price',
             'description',
+            'features_description',
             'photo',
         ]
         read_only_fields = [
