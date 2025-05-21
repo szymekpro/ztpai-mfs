@@ -34,6 +34,7 @@ services:
       - DB_NAME=postgres
       - DB_USER=postgres
       - DB_PASS=postgres
+      - CELERY_BROKER_URL=amqp://mquser:bunnypass123@mq:5672//
     depends_on:
       db:
         condition: service_healthy
@@ -55,6 +56,34 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
+
+  mq:
+    image: rabbitmq:3.13.7-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=mquser
+      - RABBITMQ_DEFAULT_PASS=bunnypass123
+    networks:
+      - app-network
+
+  worker:
+    build:
+      context: .
+    volumes:
+      - ./backend:/backend
+    working_dir: /backend/backend
+    command: >
+      sh -c "celery -A backend worker -l INFO"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - CELERY_BROKER_URL=amqp://mquser:bunnypass123@mq:5672//
+    depends_on:
+      - backend
+      - mq
     networks:
       - app-network
 

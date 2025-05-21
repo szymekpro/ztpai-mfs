@@ -21,6 +21,10 @@ env = environ.Env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
+
+BREVO_API_KEY = env('BREVO_API_KEY')
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -173,3 +177,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
+
+DEFAULT_FROM_EMAIL = "bratster284@gmail.com"
