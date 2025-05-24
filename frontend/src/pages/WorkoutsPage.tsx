@@ -9,6 +9,7 @@ export default function WorkoutsPage() {
                 flexDirection: 'column',
                 gap: 4,
                 padding: 2,
+                paddingRight: 0,
             }}>
              <Box sx={{
                  display: 'flex',

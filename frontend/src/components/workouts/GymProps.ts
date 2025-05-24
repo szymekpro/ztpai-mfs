@@ -32,7 +32,8 @@ export interface TrainerServices {
 
 export interface TrainingHistoryProps {
     id: number;
-    service_type: string;
+    service_type: TrainerServices
+    trainer: Trainer
     start_time: string;
     end_time: string;
     status: string;

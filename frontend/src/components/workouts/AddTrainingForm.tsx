@@ -85,6 +85,8 @@ export default function AddTrainingForm() {
 
         api.post('api/trainings/', {
             ...formData,
+            trainer_id: formData.trainer,
+            service_type_id: formData.service_type,
             start_time: combinedStart.toISOString(),
             end_time: combinedEnd.toISOString()
         })

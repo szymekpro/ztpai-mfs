@@ -1,4 +1,4 @@
-import {Paper} from '@mui/material';
+import {Box, Paper} from '@mui/material';
 import {JSX, ReactNode} from "react";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 
 export default function TrainingsCard({ children }: Props): JSX.Element {
     return (
-        <Paper
+        <Box
             elevation={3}
             sx={{
                 display: 'flex',
@@ -17,16 +17,14 @@ export default function TrainingsCard({ children }: Props): JSX.Element {
                 alignItems: 'center',
                 padding: 2,
                 borderRadius: 2,
-                backgroundColor: '#f5f5f5',
                 marginBottom: 2,
                 width: '100%',
                 minHeight: 600,
                 maxHeight: '75vh',
-                overflowY: 'scroll',
             }}
         >
             {children}
-        </Paper>
+        </Box>
     );
 }
 

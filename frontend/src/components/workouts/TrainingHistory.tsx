@@ -1,69 +1,43 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 import TrainingsCard from "./TrainingsCard.tsx";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import api from "../../api/axiosApi.ts";
-import {TrainingHistoryProps} from "GymProps.ts"
-
+import { TrainingHistoryProps, TrainerServices } from "GymProps.ts";
+import TrainingCard from "./TrainingCard.tsx"; // <-- dodaj import
 
 export default function TrainingHistory() {
-    const [trainings, setTrainings] = useState<TrainingHistoryProps[]>([]);
+  const [trainings, setTrainings] = useState<TrainingHistoryProps[]>([]);
+  const [services, setServices] = useState<TrainerServices[]>([]);
 
-    useEffect(() => {
-        api.get('/api/trainings/')
-            .then(res => {
-                setTrainings(res.data);
-            })
-            .catch(err => console.error(err));
-    }, []);
+  useEffect(() => {
+    api.get("/api/trainings/")
+      .then((res) => {
+        setTrainings(res.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
-    return (
-        <TrainingsCard>
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                width: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>
-                    Your Training History:
-                </Typography>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    width: '100%',
-                }}>
-                    {trainings.length === 0 ? (
-                        <Typography variant="body1" color="text.secondary">
-                            You have no training history.
-                        </Typography>
-                    ) : (
-                        trainings.map((training) => (
-                            <Box key={training.id} sx={{
-                                padding: 2,
-                                borderRadius: 2,
-                                backgroundColor: '#f5f5f5',
-                                marginBottom: 2,
-                            }}>
-                                <Typography variant="body1">
-                                    {`Training on ${new Date(training.start_time).toLocaleString()}`}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {`Service: ${training.service}`}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {`Status: ${training.status}`}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {`Description: ${training.description}`}
-                                </Typography>
-                            </Box>
-                        ))
-                    )}
-                </Box>
-            </Box>
-        </TrainingsCard>
-    );
+  return (
+    <TrainingsCard>
+      <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+        <Typography variant="h6" mb={2}>
+          Your Training History:
+        </Typography>
+
+        {trainings.length === 0 ? (
+          <Typography variant="body1" color="text.secondary">
+            You have no training history.
+          </Typography>
+        ) : (
+          <Grid container spacing={2}>
+            {trainings.map((training) => (
+              <Grid item xs={12} sm={6} md={4} key={training.id}>
+                <TrainingCard training={training} />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
+    </TrainingsCard>
+  );
 }
