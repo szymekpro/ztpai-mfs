@@ -78,8 +78,8 @@ export default function PaymentsList() {
   };
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{ p: 4 , display: 'flex', flexDirection: 'column'}}>
+      <Typography variant="h4" gutterBottom mb={4}>
         Payment History
       </Typography>
 
@@ -88,43 +88,107 @@ export default function PaymentsList() {
       ) : payments.length === 0 ? (
         <Typography>No payments found.</Typography>
       ) : (
-        <Grid container spacing={3}>
+        <Grid container spacing={2} direction="column" sx={{width: '90vw'}}>
           {payments.map((payment) => (
-            <Grid item xs={12} sm={6} md={4} key={payment.id}>
-              <Card elevation={2}>
-                <CardContent>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mb={1}
-                  >
-                    <Typography variant="h6">
-                      {payment.description || "No description"}
-                    </Typography>
-                    <IconButton onClick={() => handleEditClick(payment)} size="small">
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
+  <Grid item xs={12} key={payment.id}>
+    <Box
+      sx={{
+        display: "flex",
+        width: '100%',
+        overflow: "hidden",
+        "&:hover .details-panel": {
+          transform: "translateX(0)",
+          opacity: 1,
+          visibility: "visible",
+        },
+      }}
+    >
+      <Card elevation={2} sx={{ flex: "1 0 60%" }}>
+        <CardContent>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={1}
+          >
+            <Typography variant="h6">
+              {payment.description || "No description"}
+            </Typography>
+            <IconButton onClick={() => handleEditClick(payment)} size="small">
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Box>
 
-                  <Typography variant="body1" fontWeight={600}>
-                    {Number(payment.amount).toFixed(2)} PLN
-                  </Typography>
+          <Typography variant="body1" fontWeight={600}>
+            {Number(payment.amount).toFixed(2)} PLN
+          </Typography>
 
-                  <Typography variant="body2" color="text.secondary" mb={1}>
-                    {dayjs(payment.created_at).format("YYYY-MM-DD HH:mm")}
-                  </Typography>
+          <Typography variant="body2" color="text.secondary" mb={1}>
+            {dayjs(payment.created_at).format("YYYY-MM-DD HH:mm")}
+          </Typography>
 
-                  <Chip
-                    label={payment.status.toUpperCase()}
-                    color={getStatusColor(payment.status)}
-                    variant="outlined"
-                    size="small"
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+          <Chip
+            label={payment.status.toUpperCase()}
+            color={getStatusColor(payment.status)}
+            variant="outlined"
+            size="small"
+          />
+        </CardContent>
+      </Card>
+
+      <Box
+            className="details-panel"
+            sx={{
+              width: 'calc(100vw - 60%)',
+              backgroundColor: "background.paper",
+              borderLeft: "1px solid #ddd",
+              borderRadius: "3px 10px 10px 3px",
+              padding: 2,
+              transform: "translateX(-100%)",
+              transition: "transform 0.8s ease, opacity 0.3s ease",
+              opacity: 0,
+              visibility: "hidden",
+            }}
+          >
+          <Box sx={{display: 'flex', flexDirection: 'row', gap: 5}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', width:400}}>
+                <Typography variant="body1" mt={1}>
+                  This payment was made on <strong>{dayjs(payment.created_at).format("MMMM D, YYYY")}</strong>
+                </Typography>
+                  <Typography variant="body1" mt={1}>
+                  It was <strong>{payment.description || "unspecified purpose"}</strong>.
+                </Typography>
+              </Box>
+            <Box sx={{display: 'flex', flexDirection: 'row'}}>
+          {payment.status === "paid" && (
+            <Typography variant="body1" mt={1} color="success.main">
+              ✅ The payment has been successfully completed. No further action is required.
+            </Typography>
+          )}
+
+          {payment.status === "pending" && (
+            <Typography variant="body1" mt={1} color="warning.main">
+              ⏳ This payment is still pending. Please make sure to complete it to confirm your reservation or service.
+            </Typography>
+          )}
+
+          {payment.status === "failed" && (
+            <Typography variant="body1" mt={1} color="error.main">
+              ❌ The payment attempt failed. Please try again or use a different payment method.
+            </Typography>
+          )}
+
+          {payment.status === "refunded" && (
+            <Typography variant="body1" mt={1} color="text.secondary">
+              💸 This payment has been refunded. If you have not received the refund, please contact support.
+            </Typography>
+          )}
+              </Box>
+            </Box>
+        </Box>
+            </Box>
+          </Grid>
+        ))}
         </Grid>
       )}
 
