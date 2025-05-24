@@ -4,23 +4,30 @@ import {
   CardContent,
   Typography,
   Avatar,
-  Chip
+  Chip,
+  Button
 } from "@mui/material";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
-import AccessibleIcon from "@mui/icons-material/Accessible";
+import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import GroupsIcon from "@mui/icons-material/Groups";
 import EventIcon from "@mui/icons-material/Event";
 import dayjs from "dayjs";
 import { TrainingHistoryProps } from "GymProps.ts";
 
-export default function TrainingCard({ training }: { training: TrainingHistoryProps }) {
+export default function TrainingCard({
+  training,
+  onCancel
+}: {
+  training: TrainingHistoryProps;
+  onCancel?: (trainingId: number) => void;
+}) {
   const getIcon = (type: string) => {
     switch (type.toLowerCase()) {
-      case "strength":
+      case "strength training":
         return <FitnessCenterIcon />;
-      case "physio":
-        return <AccessibleIcon />;
-      case "group class":
+      case "bodybuilding training":
+        return <AccessibilityIcon />;
+      case "crossfit":
         return <GroupsIcon />;
       default:
         return <EventIcon />;
@@ -31,10 +38,7 @@ export default function TrainingCard({ training }: { training: TrainingHistoryPr
     switch (status) {
       case "completed":
         return "success";
-      case "pending":
-        return "warning";
       case "cancelled":
-      case "failed":
         return "error";
       default:
         return "default";
@@ -45,15 +49,16 @@ export default function TrainingCard({ training }: { training: TrainingHistoryPr
     switch (status) {
       case "completed":
         return "#e8f5e9";
-      case "pending":
-        return "#fffde7";
       case "cancelled":
-      case "failed":
         return "#ffebee";
       default:
         return "#f5f5f5";
     }
   };
+
+  const isCancelable =
+    training.status === "scheduled" &&
+    dayjs(training.start_time).isAfter(dayjs());
 
   return (
     <Card
@@ -62,14 +67,16 @@ export default function TrainingCard({ training }: { training: TrainingHistoryPr
         borderRadius: 2,
         boxShadow: 2,
         padding: 2,
-        height: "180px", width: "250px",
+        paddingTop: 1,
+        height: "180px",
+        width: "313px",
+        position: "relative",
       }}
     >
-      <CardContent>
-        <Box display="flex" alignItems="center" gap={2} mb={1}>
-          <Avatar>
-            {getIcon(training.service_type.name)}
-          </Avatar>
+      <CardContent sx={{ height: "100%", paddingBottom: "48px" }}>
+        <Box display="flex" alignItems="center" gap={2} mb={2}>
+          <Avatar>{getIcon(training.service_type.name)}</Avatar>
+          {console.log(training.service_type.name)}
           <Box>
             <Typography variant="h6">{training.service_type.name}</Typography>
             <Typography variant="body2" color="text.secondary">
@@ -79,19 +86,35 @@ export default function TrainingCard({ training }: { training: TrainingHistoryPr
         </Box>
 
         <Typography variant="body2" gutterBottom>
-          <strong>Trainer:</strong> {training.trainer.first_name} {training.trainer.last_name}
+          <strong>Trainer:</strong> {training.trainer.first_name}{" "}
+          {training.trainer.last_name}
         </Typography>
         <Typography variant="body2" gutterBottom>
-          <strong>Description:</strong> {training.description || "No description"}
+          <strong>Description:</strong>{" "}
+          {training.description || "No description"}
         </Typography>
+      </CardContent>
 
+      <Box sx={{ position: "absolute", bottom: 18, left: 16 }}>
         <Chip
           label={training.status.toUpperCase()}
           color={getStatusColor(training.status)}
           size="small"
-          sx={{ mt: 1 }}
         />
-      </CardContent>
+      </Box>
+
+      {isCancelable && (
+        <Box sx={{ position: "absolute", bottom: 18, right: 16 }}>
+          <Button
+            size="small"
+            color="error"
+            variant="outlined"
+            onClick={() => onCancel?.(training.id)}
+          >
+            Cancel
+          </Button>
+        </Box>
+      )}
     </Card>
   );
 }

@@ -9,11 +9,11 @@ export default function WorkoutsPage() {
                 flexDirection: 'column',
                 gap: 4,
                 padding: 2,
-                paddingRight: 0,
+                marginLeft: 4,
             }}>
              <Box sx={{
                  display: 'flex',
-                 gap: 4,
+                 gap: 12,
                  flexDirection: 'row',
             }}>
                 <AddTrainingForm />

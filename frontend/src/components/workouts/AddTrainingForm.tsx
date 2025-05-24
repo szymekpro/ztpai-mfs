@@ -30,6 +30,7 @@ export default function AddTrainingForm() {
         "10:00", "11:00", "12:00", "13:00", "14:00"
     ];
 
+
     useEffect(() => {
         api.get('api/trainers/').then(res => setTrainers(res.data));
         api.get('api/gyms/').then(res => setGyms(res.data));
@@ -43,6 +44,12 @@ export default function AddTrainingForm() {
             .then(res => setBookedHours(res.data.booked_hours))
             .catch(err => console.error("Failed to fetch booked hours:", err));
     }, [formData.trainer, selectedDate]);
+
+    useEffect(() => {
+        setSelectedHour(null);
+        }, [selectedDate]);
+
+
 
     useEffect(() => {
         if (!formData.trainer) return;
@@ -155,11 +162,11 @@ export default function AddTrainingForm() {
                         ))}
                     </Select>
             </FormControl>
-
             <DatePicker
                 label="Select Date"
                 value={selectedDate}
                 onChange={(newValue) => setSelectedDate(newValue)}
+                minDate={dayjs()}
                 slotProps={{
                     textField: {
                         fullWidth: true,
@@ -167,50 +174,55 @@ export default function AddTrainingForm() {
                     },
                 }}
             />
-
             {selectedDate && (
                 <Box>
                     <ToggleButtonGroup
-                        value={selectedHour}
-                        exclusive
-                        onChange={(e, newValue) => {
-                            if (newValue !== null) setSelectedHour(newValue);
-                        }}
-                        sx={{
-                            flexWrap: 'wrap',
-                            gap: 1,
-                            justifyContent: 'center',
-                            '& .MuiToggleButtonGroup-grouped': {
-                                borderRadius: 2,
-                                margin: '4px',
-                                border: '1px solid #ccc',
-                                minWidth: '60px',
-                                height: '36px',
-                                fontWeight: 600,
-                                backgroundColor: '#ece9e9',
-                                color: '#404042',
-                                '&.Mui-selected': {
-                                    backgroundColor: '#1d7ecd',
-                                    color: '#fff',
-                                    borderColor: '#1d7ecd',
-                                },
-                                '&:hover': {
-                                    backgroundColor: '#d5e8f7',
-                                },
-                            }
-                        }}
+                  key={selectedDate?.format('YYYY-MM-DD') || 'no-date'}
+                  value={selectedHour}
+                  exclusive
+                  onChange={(e, newValue) => {
+                    if (newValue !== null) setSelectedHour(newValue);
+                  }}
+                  sx={{
+                    flexWrap: 'wrap',
+                    gap: 1,
+                    justifyContent: 'center',
+                    '& .MuiToggleButtonGroup-grouped': {
+                      borderRadius: 2,
+                      margin: '4px',
+                      border: '1px solid #ccc',
+                      minWidth: '60px',
+                      height: '36px',
+                      fontWeight: 600,
+                      backgroundColor: '#ece9e9',
+                      color: '#404042',
+                      '&.Mui-selected': {
+                        backgroundColor: '#1d7ecd',
+                        color: '#fff',
+                        borderColor: '#1d7ecd',
+                      },
+                      '&:hover': {
+                        backgroundColor: '#d5e8f7',
+                      },
+                    },
+                  }}
+                >
+                  {availableHours.map((hour) => (
+                    <ToggleButton
+                      key={hour}
+                      value={hour}
+                      disabled={
+                        bookedHours.includes(hour) ||
+                        (selectedDate?.isSame(dayjs(), 'day') &&
+                         Number(hour.split(':')[0]) <= dayjs().hour())
+                      }
                     >
-                        {availableHours.map((hour) => (
-                            <ToggleButton key={hour} value={hour} disabled={bookedHours.includes(hour)}>
-                                {hour}
-                            </ToggleButton>
-                        ))}
-                    </ToggleButtonGroup>
-
+                      {hour}
+                    </ToggleButton>
+                  ))}
+                </ToggleButtonGroup>
                 </Box>
             )}
-
-
             <TextField
                 label="Notes"
                 name="description"

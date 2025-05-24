@@ -17,10 +17,25 @@ export default function TrainingHistory() {
       .catch((err) => console.error(err));
   }, []);
 
+  const handleCancelTraining = (trainingId: number) => {
+  if (!window.confirm("Are you sure you want to cancel this training?")) return;
+
+  api.patch(`/api/trainings/${trainingId}/`, { status: "cancelled" })
+    .then(() => {
+      setTrainings((prev) =>
+        prev.map((t) =>
+          t.id === trainingId ? { ...t, status: "cancelled" } : t
+        )
+      );
+    })
+    .catch((err) => console.error("Failed to cancel training:", err));
+};
+
+
+
   return (
-    <TrainingsCard>
       <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
-        <Typography variant="h6" mb={2}>
+        <Typography variant="h6" mb={2} >
           Your Training History:
         </Typography>
 
@@ -29,15 +44,14 @@ export default function TrainingHistory() {
             You have no training history.
           </Typography>
         ) : (
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
             {trainings.map((training) => (
               <Grid item xs={12} sm={6} md={4} key={training.id}>
-                <TrainingCard training={training} />
+                <TrainingCard training={training} onCancel={handleCancelTraining}/>
               </Grid>
             ))}
           </Grid>
         )}
       </Box>
-    </TrainingsCard>
   );
 }

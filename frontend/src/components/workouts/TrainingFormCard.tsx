@@ -19,7 +19,7 @@ export default function TrainingFormCard({ children }: Props): JSX.Element {
                 borderRadius: 2,
                 backgroundColor: '#f5f5f5',
                 marginBottom: 2,
-                width: '69%',
+                width: '83%',
                 minHeight: 600,
                 maxHeight: '75vh',
             }}
