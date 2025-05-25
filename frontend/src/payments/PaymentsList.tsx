@@ -7,7 +7,7 @@ import {
   CardContent,
   Chip,
   Grid,
-  IconButton, Button,
+  IconButton, Button, FormControl, InputLabel, Select, MenuItem,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import dayjs from "dayjs";
@@ -28,6 +28,21 @@ export default function PaymentsList() {
   const [loading, setLoading] = useState(true);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const currentMonth = dayjs().format("YYYY-MM");
+  const [monthFilter, setMonthFilter] = useState<string>(currentMonth);
+  const [showOnlyPending, setShowOnlyPending] = useState(false);
+
+
+  const startDate = dayjs("2025-03-01");
+  const now = dayjs();
+
+  const monthsList: string[] = [];
+  let current = startDate.startOf("month");
+
+  while (current.isBefore(now, "month") || current.isSame(now, "month")) {
+    monthsList.push(current.format("YYYY-MM"));
+    current = current.add(1, "month");
+  }
 
   const { role, isMember } = useUserRole();
 
@@ -79,16 +94,22 @@ export default function PaymentsList() {
 
   const handleMockPay = async (paymentId: number) => {
   try {
-    const res = await api.patch(`/api/payments/${paymentId}/`, {
-      status: "paid"
-    });
-    setPayments((prev) =>
-      prev.map((p) => (p.id === paymentId ? { ...p, ...res.data } : p))
-    );
-  } catch (err) {
-    console.error("Failed to mock pay:", err);
-  }
-};
+      const res = await api.patch(`/api/payments/${paymentId}/`, {
+        status: "paid"
+      });
+      setPayments((prev) =>
+        prev.map((p) => (p.id === paymentId ? { ...p, ...res.data } : p))
+      );
+    } catch (err) {
+      console.error("Failed to mock pay:", err);
+    }
+  };
+
+  const filteredPayments = payments.filter((payment) => {
+    const isSameMonth = dayjs(payment.created_at).format("YYYY-MM") === monthFilter;
+    const isPending = showOnlyPending ? payment.status === "pending" : true;
+    return isSameMonth && isPending;
+  });
 
 
   return (
@@ -96,14 +117,36 @@ export default function PaymentsList() {
       <Typography variant="h5" gutterBottom mb={2}>
         Payment history:
       </Typography>
-
       {loading ? (
         <CircularProgress />
       ) : payments.length === 0 ? (
         <Typography>No payments found.</Typography>
       ) : (
         <Grid container spacing={2} direction="column" sx={{width: '90vw'}}>
-          {payments.map((payment) => (
+          <FormControl sx={{ mb: 1, width: 200 }}>
+            <InputLabel>Month</InputLabel>
+            <Select
+                value={monthFilter}
+                onChange={(e) => setMonthFilter(e.target.value)}
+                label="Month"
+            >
+              {monthsList.map((month) => (
+                  <MenuItem key={month} value={month}>
+                    {dayjs(month).format("MMMM YYYY")}
+                  </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+              variant={showOnlyPending ? "contained" : "outlined"}
+              color="warning"
+              onClick={() => setShowOnlyPending((prev) => !prev)}
+              sx={{ mb: 2, alignSelf: 'flex-start' }}
+          >
+            {showOnlyPending ? "Show all payments" : "Show only pending"}
+          </Button>
+
+          {filteredPayments .map((payment) => (
   <Grid item xs={12} key={payment.id}>
     <Box
       sx={{
