@@ -63,6 +63,19 @@ export default function MainAppLayout() {
                     flexGrow: 1,
                     height: '100vh',
                     overflowY: 'auto',
+                    "&::-webkit-scrollbar": {
+                        width: 8,
+                    },
+                    "&::-webkit-scrollbar-track": {
+                        backgroundColor: "transparent",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: "#ccc",
+                        borderRadius: 3,
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                        backgroundColor: "#aaa",
+                    },
                 }}
             >
                 <Box sx={{

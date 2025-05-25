@@ -34,8 +34,28 @@ export default function TrainingHistory() {
 
 
   return (
-      <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
-        <Typography variant="h6" mb={2} >
+      <Box sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          height: "81vh",
+          overflow: "auto",
+          alignItems: "center",
+          "&::-webkit-scrollbar": {
+              width: 6,
+          },
+          "&::-webkit-scrollbar-track": {
+              backgroundColor: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "#ccc",
+              borderRadius: 3,
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: "#aaa",
+          },
+      }}>
+        <Typography variant="h6" mb={2} sx={{alignSelf: "flex-start"}} >
           Your Training History:
         </Typography>
 
@@ -44,7 +64,7 @@ export default function TrainingHistory() {
             You have no training history.
           </Typography>
         ) : (
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             {trainings.map((training) => (
               <Grid item xs={12} sm={6} md={4} key={training.id}>
                 <TrainingCard training={training} onCancel={handleCancelTraining}/>

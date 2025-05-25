@@ -9,6 +9,7 @@ from drf_spectacular.utils import (
 from ..models import MembershipType, UserMembership
 from payments.models import Payment
 from ..serializers import MembershipTypeSerializer, UserMembershipSerializer
+from django.utils.timezone import now
 
 
 @extend_schema_view(
@@ -101,3 +102,8 @@ class UserMembershipViewSet(ModelViewSet):
             object_id=user_membership.id,
         )
 
+    @action(detail=False, methods=["get"], url_path="active")
+    def has_active_membership(self, request):
+        active = self.get_queryset().filter(
+            is_active=True).exists()
+        return Response({"has_membership": active})

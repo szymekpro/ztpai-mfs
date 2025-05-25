@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse
-from ..models import Gym, Trainer, TrainerAvailability
+from ..models import Gym, Trainer, TrainerAvailability, TrainerService
 from ..serializers import GymSerializer, TrainerSerializer, TrainerAvailabilitySerializer, TrainerServiceSerializer
 from trainings.models import ScheduledTraining
 
@@ -146,3 +146,8 @@ class TrainerViewSet(ModelViewSet):
 class TrainerAvailabilityViewSet(ModelViewSet):
     queryset = TrainerAvailability.objects.all()
     serializer_class = TrainerAvailabilitySerializer
+
+
+class TrainerServiceViewSet(ModelViewSet):
+    queryset = TrainerService.objects.all()
+    serializer_class = TrainerServiceSerializer

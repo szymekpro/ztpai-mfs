@@ -74,9 +74,15 @@ export default function MembershipCard() {
                         <Typography variant="body2" color="text.secondary">
                             {item.membership_type.description}
                         </Typography>
-                        <Typography sx={{ mt: 1 }}>
-                            <strong>Timestamp:</strong> {item.start_date} – {item.end_date}
+                        {(item.is_active) ? (
+                        <Typography variant="h6" color="success" sx={{ mt: 1 , fontWeight: "bold" }}>
+                            Active
                         </Typography>
+                        ) : (
+                        <Typography variant="h6" color="error" sx={{ mt: 1 , fontWeight: "bold" }}>
+                            Not-active
+                        </Typography>
+                        )}
                     </Box>
                 </Paper>
             ))

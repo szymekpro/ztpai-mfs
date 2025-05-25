@@ -15,6 +15,7 @@ export default function MembershipsBox({ children }: Props): JSX.Element {
             width: '90vw',
             height: 'auto',
             padding: 2,
+
         }}>
             {children}
         </Box>

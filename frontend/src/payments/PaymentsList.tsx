@@ -7,7 +7,7 @@ import {
   CardContent,
   Chip,
   Grid,
-  IconButton,
+  IconButton, Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import dayjs from "dayjs";
@@ -77,10 +77,24 @@ export default function PaymentsList() {
     }
   };
 
+  const handleMockPay = async (paymentId: number) => {
+  try {
+    const res = await api.patch(`/api/payments/${paymentId}/`, {
+      status: "paid"
+    });
+    setPayments((prev) =>
+      prev.map((p) => (p.id === paymentId ? { ...p, ...res.data } : p))
+    );
+  } catch (err) {
+    console.error("Failed to mock pay:", err);
+  }
+};
+
+
   return (
     <Box sx={{ p: 4 , display: 'flex', flexDirection: 'column'}}>
-      <Typography variant="h4" gutterBottom mb={4}>
-        Payment History
+      <Typography variant="h5" gutterBottom mb={2}>
+        Payment history:
       </Typography>
 
       {loading ? (
@@ -127,15 +141,31 @@ export default function PaymentsList() {
             {dayjs(payment.created_at).format("YYYY-MM-DD HH:mm")}
           </Typography>
 
-          <Chip
-            label={payment.status.toUpperCase()}
-            color={getStatusColor(payment.status)}
-            variant="outlined"
-            size="small"
-          />
+          <Box sx={ {display: 'flex', flexDirection: "row", alignItems: "center", marginTop: 1}}>
+            <Chip
+              label={payment.status.toUpperCase()}
+              color={getStatusColor(payment.status)}
+              variant="outlined"
+              size="medium"
+            />
+            {payment.status === "pending" && (
+              <Box ml={1}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="info"
+                  onClick={() => handleMockPay(payment.id)}
+                  sx={{
+                    borderRadius: "15px",
+                }}
+                >
+                  Pay
+                </Button>
+              </Box>
+            )}
+            </Box>
         </CardContent>
       </Card>
-
       <Box
             className="details-panel"
             sx={{

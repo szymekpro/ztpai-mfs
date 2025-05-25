@@ -1,5 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
 from ..models import ScheduledTraining
 from ..serializers import ScheduledTrainingSerializer
 from rest_framework.permissions import IsAuthenticated

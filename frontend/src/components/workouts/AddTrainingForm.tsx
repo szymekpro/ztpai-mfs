@@ -1,6 +1,6 @@
 import {
     Box, Button, MenuItem, Select, InputLabel,
-    FormControl, SelectChangeEvent, TextField, ToggleButton, ToggleButtonGroup, Typography
+    FormControl, SelectChangeEvent, TextField, ToggleButton, ToggleButtonGroup, Typography, CircularProgress
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useEffect, useState } from "react";
@@ -16,6 +16,8 @@ export default function AddTrainingForm() {
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [selectedHour, setSelectedHour] = useState<string | null>(null);
     const [availableServices, setAvailableServices] = useState<TrainerServices[]>([]);
+    const [hasActiveMembership, setHasActiveMembership] = useState<boolean | null>(null);
+
 
     const [formData, setFormData] = useState<FormValues>({
         trainer: '',
@@ -30,10 +32,13 @@ export default function AddTrainingForm() {
         "10:00", "11:00", "12:00", "13:00", "14:00"
     ];
 
-
     useEffect(() => {
         api.get('api/trainers/').then(res => setTrainers(res.data));
         api.get('api/gyms/').then(res => setGyms(res.data));
+        api.get('api/user-memberships/active/').then(res => {
+            setHasActiveMembership(res.data.has_membership);
+            console.log("API returned:", res.data);
+        });
     }, []);
 
     useEffect(() => {
@@ -48,7 +53,6 @@ export default function AddTrainingForm() {
     useEffect(() => {
         setSelectedHour(null);
         }, [selectedDate]);
-
 
 
     useEffect(() => {
@@ -114,6 +118,9 @@ export default function AddTrainingForm() {
 
     return (
         <TrainingFormCard>
+            {hasActiveMembership === null ? (
+                <CircularProgress />
+            ) : hasActiveMembership ? (
             <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -251,8 +258,13 @@ export default function AddTrainingForm() {
             }}>
                 Schedule Training
             </Button>
-        </Box>
             </Box>
+        </Box>
+            ) : (
+                <Typography color="error">
+                    You need an active membership to schedule a training.
+                </Typography>)
+            }
         </TrainingFormCard>
     );
 }

@@ -1,5 +1,6 @@
 import {Paper} from '@mui/material';
-import {JSX, ReactNode} from "react";
+import {JSX, ReactNode, useEffect, useState} from "react";
+import api from "../../api/axiosApi.ts";
 
 type Props = {
     children: ReactNode;
@@ -7,6 +8,7 @@ type Props = {
 
 
 export default function TrainingFormCard({ children }: Props): JSX.Element {
+
     return (
         <Paper
             elevation={3}

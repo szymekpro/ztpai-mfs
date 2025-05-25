@@ -71,6 +71,7 @@ export default function TrainingCard({
         height: "180px",
         width: "313px",
         position: "relative",
+        marginBottom: 1,
       }}
     >
       <CardContent sx={{ height: "100%", paddingBottom: "48px" }}>
