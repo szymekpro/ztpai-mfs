@@ -26,10 +26,10 @@ export default function MembershipCard() {
                 justifyContent: 'flex-start',
                 alignItems: 'flex-start',
                 flexWrap: 'wrap',
-                width: '100%',
+                width: '90vw',
                 height: 'auto',
                 padding: 2,
-                gap: 2,
+                gap: 4,
             }}
             >
                 {memberships.length === 0 ? (
@@ -44,6 +44,9 @@ export default function MembershipCard() {
                         navigate(`/memberships/${item.id}`);
                     }}
                     sx={{
+                        flex: '1 1 300px',
+                        minWidth: 200,
+                        maxWidth: '100%',
                         display: 'flex',
                         flexDirection: 'row',
                         alignItems: 'center',
@@ -51,8 +54,6 @@ export default function MembershipCard() {
                         borderRadius: 2,
                         backgroundColor: '#f5f5f5',
                         marginBottom: 2,
-                        width: 'auto',
-                        maxWidth: 800,
                         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                         '&:hover': {
                             transform: 'scale(1.03)',

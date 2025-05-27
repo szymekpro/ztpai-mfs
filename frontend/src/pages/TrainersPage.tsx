@@ -3,9 +3,6 @@ import TrainersList from "../components/trainers/TrainerList.tsx"
 
 export default function TrainersPage() {
 
-    const selectedGym = localStorage.getItem("selectedGymObj");
-    const selectedGymObj = selectedGym ? JSON.parse(selectedGym) : null;
-
     return (
         <Box
             sx={{
@@ -14,7 +11,7 @@ export default function TrainersPage() {
             }}
         >
             <Typography variant="h6" sx={{ mb: 1 }}>
-                Our Trainers on gym {selectedGymObj?.name}:
+                Our Trainers on all gyms:
             </Typography>
             <TrainersList />
         </Box>

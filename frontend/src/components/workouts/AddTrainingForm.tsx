@@ -1,6 +1,6 @@
 import {
     Box, Button, MenuItem, Select, InputLabel,
-    FormControl, SelectChangeEvent, TextField, ToggleButton, ToggleButtonGroup, Typography, CircularProgress
+    FormControl, SelectChangeEvent, TextField, ToggleButton, ToggleButtonGroup, Typography, CircularProgress, IconButton
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import api from "../../api/axiosApi.ts";
 import dayjs, { Dayjs } from 'dayjs';
 import TrainingFormCard from "./TrainingFormCard.tsx";
 import {Gym, Trainer, FormValues, TrainerServices} from "./GymProps.ts"
+import { useNavigate } from "react-router-dom";
 
 export default function AddTrainingForm() {
     const [trainers, setTrainers] = useState<Trainer[]>([]);
@@ -17,7 +18,7 @@ export default function AddTrainingForm() {
     const [selectedHour, setSelectedHour] = useState<string | null>(null);
     const [availableServices, setAvailableServices] = useState<TrainerServices[]>([]);
     const [hasActiveMembership, setHasActiveMembership] = useState<boolean | null>(null);
-
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState<FormValues>({
         trainer: '',
@@ -112,6 +113,7 @@ export default function AddTrainingForm() {
                 });
                 setSelectedDate(null);
                 setSelectedHour(null);
+                navigate('/workouts');
             })
             .catch(err => console.error(err));
     };
@@ -136,7 +138,7 @@ export default function AddTrainingForm() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 4,
+            gap: 3,
             maxWidth: 500,
             minWidth: 500,
         }}>
@@ -248,7 +250,7 @@ export default function AddTrainingForm() {
                     !formData.trainer || !formData.service_type || !selectedDate || !selectedHour
                 }
                 sx={{
-                    mt: 2,
+                    mb: 2,
                     backgroundColor: '#1d7ecd',
                     height: 40,
                     width: 300,
