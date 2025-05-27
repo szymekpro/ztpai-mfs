@@ -16,6 +16,7 @@ import RegisterForm from "./components/auth/RegisterForm.tsx";
 import MembershipDetails from "./components/memberships/MembershipDetails.tsx";
 import MembershipBuyPage from "./pages/MembershipBuyPage.tsx";
 import ScheduleWorkoutPage from "./pages/ScheduleWorkoutPage.tsx";
+import TrainerDetails from "./components/trainers/TrainerDetails.tsx";
 
 function Logout () {
   localStorage.clear();
@@ -44,6 +45,7 @@ function App() {
             <Route path="/gyms/:id" element={<ProtectedRoute><GymDetails /></ProtectedRoute>} />
             <Route path="/payments" element={<ProtectedRoute><PaymentsPage /></ProtectedRoute>} />
             <Route path="/trainers" element={<ProtectedRoute><TrainersPage /></ProtectedRoute>} />
+            <Route path="/trainers/:id" element={<ProtectedRoute><TrainerDetails /></ProtectedRoute>} />
             <Route path="/workouts" element={<ProtectedRoute><WorkoutsPage /></ProtectedRoute>} />
             <Route path="/schedule-workout" element={<ProtectedRoute><ScheduleWorkoutPage /></ProtectedRoute>} />
         </Route>

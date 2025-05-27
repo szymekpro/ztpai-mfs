@@ -11,26 +11,22 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import api from "../../api/axiosApi";
 import EditTrainerDialog from "./EditTrainerDialog";
+import { TrainerCardProps } from "./TrainersProps.ts";
+import {useNavigate} from "react-router-dom";
 
-export interface TrainerCardProps {
-  id: number;
-  first_name: string;
-  last_name: string;
-  bio: string;
-  photo: string;
-  onDelete?: (id: number) => void;
-}
 
 export default function TrainerCard({
   id,
   first_name,
   last_name,
   bio,
+  description,
   photo,
   onDelete
 }: TrainerCardProps) {
   const token = localStorage.getItem("access");
   const trainerId = id;
+  const navigate = useNavigate();
 
   let role = null;
 
@@ -44,7 +40,7 @@ export default function TrainerCard({
   }
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [trainerState, setTrainerState] = useState({ bio, first_name, last_name });
+  const [trainerState, setTrainerState] = useState({ bio, description, first_name, last_name });
 
   const handleDelete = () => {
     if (confirm("Are you sure you want to delete this trainer?")) {
@@ -56,7 +52,7 @@ export default function TrainerCard({
     }
   };
 
-  const handlePatchSubmit = async (data: { bio: string }) => {
+  const handlePatchSubmit = async (data: { description: string }) => {
     try {
       const res = await api.patch(`/api/trainers/${trainerId}/`, data);
       setTrainerState((prev) => ({ ...prev, ...res.data }));
@@ -66,14 +62,18 @@ export default function TrainerCard({
     }
   };
 
-  console.log(trainerId)
-
   return (
     <Card
+        onClick={() => {
+            navigate(`/trainers/${id}`);
+        }}
       sx={{
+        flex: "1 1 325px",
+        minWidth: 260,
+        maxWidth: 450,
+        height: 380,
         display: "flex",
         flexDirection: "column",
-        width: 300,
         borderRadius: 2,
         boxShadow: 3,
         overflow: "hidden",
@@ -88,7 +88,14 @@ export default function TrainerCard({
       }}
     >
       {role !== "member" && (
-        <Box sx={{ position: "absolute", top: 8, right: 8, display: "flex", gap: 1, zIndex: 1 }}>
+        <Box sx={{
+          display: "flex",
+          zIndex: 1,
+          alignSelf: "flex-end",
+          height: 20,
+          mr: 1,
+          mt: 1
+        }}>
           <IconButton size="small" color="primary" onClick={() => setEditDialogOpen(true)}>
             <EditIcon fontSize="small" />
           </IconButton>
@@ -98,21 +105,21 @@ export default function TrainerCard({
         </Box>
       )}
 
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", p: 2, backgroundColor: "#fafafa" }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 1, backgroundColor: "#fafafa" }}>
         <CardMedia
           component="img"
           image={photo}
           alt={`${trainerState.first_name} ${trainerState.last_name}`}
-          sx={{ height: 160, width: "auto", borderRadius: 2, objectFit: "contain" }}
+          sx={{ height: 250, width: "auto", borderRadius: 2, objectFit: "contain" }}
         />
       </Box>
 
-      <CardContent sx={{ textAlign: "left" }}>
-        <Typography variant="h6" fontWeight="bold">
+      <CardContent sx={{ textAlign: "left"}}>
+        <Typography variant="h5" fontWeight="bold" mb={1}>
           {trainerState.first_name} {trainerState.last_name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {trainerState.bio}
+        <Typography variant="body1" color="text.secondary">
+          {trainerState.description}
         </Typography>
       </CardContent>
 
@@ -121,7 +128,7 @@ export default function TrainerCard({
           open={editDialogOpen}
           onClose={() => setEditDialogOpen(false)}
           onSubmit={handlePatchSubmit}
-          currentBio={trainerState.bio}
+          currentDescription={trainerState.description}
         />
       )}
     </Card>

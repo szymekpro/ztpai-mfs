@@ -24,9 +24,10 @@ class Trainer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     gym = models.ForeignKey(Gym, on_delete=models.CASCADE, related_name='trainers')
-    bio = models.TextField(blank=True)
+    description = models.TextField(blank=True, max_length=50, default="no description")
+    bio = models.TextField(blank=True, default="no bio")
     available_services = models.ManyToManyField(TrainerService, related_name="trainers")
-    photo = models.ImageField(default='trainer-standard.png', blank=True)
+    photo = models.ImageField(upload_to='', default='trainer_blank_3-1.jpg', blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.gym.name})"

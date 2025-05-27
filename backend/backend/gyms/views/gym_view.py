@@ -1,7 +1,7 @@
 # gyms/views.py
-from datetime import datetime
+from datetime import datetime, timedelta
 
-from django.utils.timezone import localtime
+from django.utils.timezone import localtime, now
 from drf_spectacular.types import OpenApiTypes
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -105,6 +105,32 @@ class TrainerViewSet(ModelViewSet):
 
         booked_hours = [localtime(t.start_time).strftime('%H:%M') for t in trainings]
         return Response({"booked_hours": booked_hours})
+
+    @extend_schema(
+        summary="Booked hours for current and next month",
+        description="Returns booked hours grouped by date for current and next month."
+    )
+    @action(detail=True, methods=['get'], url_path='booked-hours-range')
+    def booked_hours_range(self, request, pk=None):
+        today = now().date()
+        first_day_this_month = today.replace(day=1)
+        first_day_next_month = (first_day_this_month + timedelta(days=32)).replace(day=1)
+        first_day_month_after = (first_day_next_month + timedelta(days=32)).replace(day=1)
+
+        trainings = ScheduledTraining.objects.filter(
+            trainer_id=pk,
+            start_time__date__gte=first_day_this_month,
+            start_time__date__lt=first_day_month_after,
+            status__in=["scheduled", "completed"]
+        )
+
+        result = {}
+        for training in trainings:
+            date = localtime(training.start_time).date().isoformat()
+            hour = localtime(training.start_time).strftime('%H:%M')
+            result.setdefault(date, []).append(hour)
+
+        return Response(result)
 
     @extend_schema(
         summary="Trainer's available services for clients",

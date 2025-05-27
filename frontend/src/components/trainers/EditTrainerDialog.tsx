@@ -11,26 +11,26 @@ import { useEffect, useState } from "react";
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: { bio: string }) => void;
-  currentBio: string;
+  onSubmit: (data: { description: string }) => void;
+  currentDescription: string;
 }
 
 export default function EditTrainerDialog({
   open,
   onClose,
   onSubmit,
-  currentBio
+  currentDescription
 }: Props) {
-  const [bio, setBio] = useState(currentBio);
+  const [description, setDescription] = useState(currentDescription);
 
   useEffect(() => {
     if (open) {
-      setBio(currentBio);
+      setDescription(currentDescription);
     }
-  }, [open, currentBio]);
+  }, [open, currentDescription]);
 
   const handleSave = () => {
-    onSubmit({ bio });
+    onSubmit({ description });
   };
 
   return (
@@ -38,15 +38,24 @@ export default function EditTrainerDialog({
       <DialogTitle>Edit Trainer</DialogTitle>
 
       <DialogContent
-        sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1, minWidth: 300 }}
+        sx={{
+          flex: "1 1 auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          mt: 1,
+          minWidth: 300,
+          minHeight: 170,
+        }}
       >
         <TextField
           label="Bio"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           fullWidth
           multiline
           minRows={4}
+          sx={{marginTop: 2}}
         />
       </DialogContent>
 

@@ -67,6 +67,7 @@ class TrainerSerializer(serializers.ModelSerializer):
             'last_name',
             'gym',
             'bio',
+            'description',
             'photo',
             'full_name',
             'availability',
