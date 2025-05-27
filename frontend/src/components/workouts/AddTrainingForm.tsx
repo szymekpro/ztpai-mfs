@@ -129,8 +129,8 @@ export default function AddTrainingForm() {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
-                <Typography variant="h6" sx={{ alignSelf: 'flex-start' }}>
-                    Schedule new workout with your trainer:
+                <Typography variant="h6" mt={2}>
+                    Schedule new workout:
                 </Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{
             display: 'flex',
@@ -140,7 +140,7 @@ export default function AddTrainingForm() {
             maxWidth: 500,
             minWidth: 500,
         }}>
-            <FormControl fullWidth required sx={{mt: 2}}>
+            <FormControl required sx={{mt: 2, width: 300}}>
                 <InputLabel>Trainer</InputLabel>
                 <Select
                     name="trainer"
@@ -154,7 +154,7 @@ export default function AddTrainingForm() {
                 </Select>
             </FormControl>
 
-            <FormControl fullWidth required>
+            <FormControl required sx={{width: 300}}>
                 <InputLabel>Trainer's Service</InputLabel>
                     <Select
                         name="service_type"
@@ -174,9 +174,9 @@ export default function AddTrainingForm() {
                 value={selectedDate}
                 onChange={(newValue) => setSelectedDate(newValue)}
                 minDate={dayjs()}
+                sx={{width: 300}}
                 slotProps={{
                     textField: {
-                        fullWidth: true,
                         required: true,
                     },
                 }}
@@ -237,7 +237,7 @@ export default function AddTrainingForm() {
                 onChange={handleChange}
                 multiline
                 rows={3}
-                fullWidth
+                sx={{width: 300}}
             />
 
             <Button

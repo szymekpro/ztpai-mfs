@@ -37,8 +37,9 @@ export default function TrainingHistory() {
       <Box sx={{
           display: "flex",
           flexDirection: "column",
-          width: "100%",
-          height: "81vh",
+          width: '95vw',
+          minWidth: 330,
+          height: "auto",
           overflow: "auto",
           alignItems: "center",
           "&::-webkit-scrollbar": {
@@ -64,7 +65,7 @@ export default function TrainingHistory() {
             You have no training history.
           </Typography>
         ) : (
-          <Grid container spacing={2}>
+          <Grid container spacing={4}>
             {trainings.map((training) => (
               <Grid item xs={12} sm={6} md={4} key={training.id}>
                 <TrainingCard training={training} onCancel={handleCancelTraining}/>

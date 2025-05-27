@@ -21,7 +21,8 @@ export default function TrainingFormCard({ children }: Props): JSX.Element {
                 borderRadius: 2,
                 backgroundColor: '#f5f5f5',
                 marginBottom: 2,
-                width: '83%',
+                width: 600,
+                minWidth: 500,
                 minHeight: 600,
                 maxHeight: '75vh',
             }}

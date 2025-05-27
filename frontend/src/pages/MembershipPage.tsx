@@ -40,7 +40,7 @@ export default function MembershipsPage() {
                     Our current offer:
                 </Typography>
 
-                <Box sx={{ display: 'flex', gap: 8, justifyContent: 'center', mt: 4, width: '100%'}}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', mt: 4, width: '100%'}}>
                     {membershipTypes.map((m) => (
                         <MembershipOfferCard
                             key={m.id}

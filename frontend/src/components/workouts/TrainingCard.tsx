@@ -69,15 +69,17 @@ export default function TrainingCard({
         padding: 2,
         paddingTop: 1,
         height: "180px",
-        width: "313px",
+        width: "308px",
+        minWidth: "280px",
+        flexShrink: 10,
         position: "relative",
         marginBottom: 1,
+        marginLeft: 1
       }}
     >
       <CardContent sx={{ height: "100%", paddingBottom: "48px" }}>
         <Box display="flex" alignItems="center" gap={2} mb={2}>
           <Avatar>{getIcon(training.service_type.name)}</Avatar>
-          {console.log(training.service_type.name)}
           <Box>
             <Typography variant="h6">{training.service_type.name}</Typography>
             <Typography variant="body2" color="text.secondary">

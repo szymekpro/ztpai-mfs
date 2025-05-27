@@ -12,6 +12,7 @@ export default function MembershipsBox({ children }: Props): JSX.Element {
             flexDirection: 'column',
             justifyContent: 'flex-start',
             alignItems: 'flex-start',
+            flexWrap: 'wrap',
             width: '90vw',
             height: 'auto',
             padding: 2,

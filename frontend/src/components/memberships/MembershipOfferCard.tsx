@@ -13,7 +13,7 @@ export default function MembershipOfferCard({
   const navigate = useNavigate();
 
   return (
-    <Card sx={{ width: 400, height: 350, borderRadius: 3, boxShadow: 3, overflow: "hidden" }}>
+    <Card sx={{ width: 400, minWidth: 290, height: 350, borderRadius: 3, boxShadow: 3, overflow: "hidden" }}>
       <CardMedia
         component="img"
         image={photo}

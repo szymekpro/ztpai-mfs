@@ -25,6 +25,7 @@ export default function MembershipCard() {
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
                 alignItems: 'flex-start',
+                flexWrap: 'wrap',
                 width: '100%',
                 height: 'auto',
                 padding: 2,
