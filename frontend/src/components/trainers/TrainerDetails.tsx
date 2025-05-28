@@ -1,4 +1,4 @@
-import {Box, CardMedia, Chip, List, ListItem, ListItemText, Button, Paper, Typography} from "@mui/material";
+import {Box, CardMedia, Chip, Button, Paper, Typography} from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../api/axiosApi";
@@ -8,6 +8,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TrainerGym from "./TrainerGym";
 import EditTrainerDialog from "./EditTrainerDialog";
+import {useUserRole} from "../../hooks/useUserRole.ts";
 
 
 export default function TrainerDetails() {
@@ -17,6 +18,7 @@ export default function TrainerDetails() {
     const [bookedMap, setBookedMap] = useState<Record<string, string[]>>({});
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
     const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const { isMember } = useUserRole();
 
     useEffect(() => {
         const fetchTrainerData = async () => {
@@ -41,6 +43,7 @@ export default function TrainerDetails() {
 
     const selectedStr = selectedDate?.format("YYYY-MM-DD") || "";
     const bookedHours = bookedMap[selectedStr] || [];
+console.log(isMember)
 
     return (
         <Box sx={{
@@ -165,14 +168,17 @@ export default function TrainerDetails() {
                 <TrainerGym/>
             </Box>
         </Box>
-    <Box sx={{ mt: 1}}>
-        <Button
-            variant="outlined"
-            onClick={() => setEditDialogOpen(true)}
-            sx={{width: 200, height: 50}}>
-            Edit / Delete
-        </Button>
-    </Box>
+            {!isMember &&
+                <Box sx={{ mt: 1}}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setEditDialogOpen(true)}
+                        sx={{width: 200, height: 50}}>
+                        Edit / Delete
+                    </Button>
+                </Box>
+
+            }
             <EditTrainerDialog
                 open={editDialogOpen}
                 onClose={() => setEditDialogOpen(false)}

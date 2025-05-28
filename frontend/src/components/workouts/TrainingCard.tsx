@@ -12,7 +12,7 @@ import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import GroupsIcon from "@mui/icons-material/Groups";
 import EventIcon from "@mui/icons-material/Event";
 import dayjs from "dayjs";
-import { TrainingHistoryProps } from "GymProps.ts";
+import { TrainingHistoryProps } from "./GymProps.ts";
 
 export default function TrainingCard({
   training,

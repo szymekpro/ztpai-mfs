@@ -13,9 +13,6 @@ export default function TrainerList() {
       .catch(err => console.error(err));
   }, []);
 
-  const handleDeleteTrainer = (id: number) => {
-    setTrainers((prev) => prev.filter((trainer) => trainer.id !== id));
-  };
 
   return (
     <Box sx={{
@@ -34,7 +31,6 @@ export default function TrainerList() {
           bio={trainer.bio}
           description={trainer.description}
           photo={trainer.photo}
-          onDelete={handleDeleteTrainer}
         />
       ))}
     </Box>

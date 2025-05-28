@@ -4,13 +4,8 @@ import {
   CardContent,
   Typography,
   Box,
-  IconButton
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
-import api from "../../api/axiosApi";
-import EditTrainerDialog from "./EditTrainerDialog";
 import { TrainerCardProps } from "./TrainersProps.ts";
 import {useNavigate} from "react-router-dom";
 
@@ -22,7 +17,6 @@ export default function TrainerCard({
   bio,
   description,
   photo,
-  onDelete
 }: TrainerCardProps) {
   const token = localStorage.getItem("access");
   const trainerId = id;
@@ -39,7 +33,7 @@ export default function TrainerCard({
     }
   }
 
-  const [trainerState, setTrainerState] = useState({ bio, description, first_name, last_name });
+  const [trainerState] = useState({ bio, description, first_name, last_name });
 
   return (
     <Card

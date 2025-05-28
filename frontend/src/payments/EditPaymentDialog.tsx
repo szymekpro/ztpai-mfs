@@ -43,7 +43,6 @@ export default function EditPaymentDialog({
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Edit Payment</DialogTitle>
-
       <DialogContent
         sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1, minWidth: 300 }}
       >
@@ -53,6 +52,7 @@ export default function EditPaymentDialog({
           value={status}
           onChange={(e) => setStatus(e.target.value)}
           fullWidth
+          sx={{marginTop: 1}}
         >
           {statuses.map((s) => (
             <MenuItem key={s} value={s}>

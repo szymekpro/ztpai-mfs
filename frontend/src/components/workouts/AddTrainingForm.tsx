@@ -17,7 +17,6 @@ export default function AddTrainingForm() {
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
     const [selectedHour, setSelectedHour] = useState<string | null>(null);
     const [availableServices, setAvailableServices] = useState<TrainerServices[]>([]);
-    const [hasActiveMembership, setHasActiveMembership] = useState<boolean | null>(null);
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState<FormValues>({
@@ -36,10 +35,6 @@ export default function AddTrainingForm() {
     useEffect(() => {
         api.get('api/trainers/').then(res => setTrainers(res.data));
         api.get('api/gyms/').then(res => setGyms(res.data));
-        api.get('api/user-memberships/active/').then(res => {
-            setHasActiveMembership(res.data.has_membership);
-            console.log("API returned:", res.data);
-        });
     }, []);
 
     useEffect(() => {
@@ -120,9 +115,6 @@ export default function AddTrainingForm() {
 
     return (
         <TrainingFormCard>
-            {hasActiveMembership === null ? (
-                <CircularProgress />
-            ) : hasActiveMembership ? (
             <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -262,11 +254,6 @@ export default function AddTrainingForm() {
             </Button>
             </Box>
         </Box>
-            ) : (
-                <Typography color="error">
-                    You need an active membership to schedule a training.
-                </Typography>)
-            }
         </TrainingFormCard>
     );
 }
