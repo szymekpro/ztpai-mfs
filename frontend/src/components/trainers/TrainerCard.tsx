@@ -39,52 +39,29 @@ export default function TrainerCard({
     }
   }
 
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [trainerState, setTrainerState] = useState({ bio, description, first_name, last_name });
-
-  const handleDelete = () => {
-    if (confirm("Are you sure you want to delete this trainer?")) {
-      api.delete(`/api/trainers/${trainerId}/`)
-        .then(() => {
-          if (onDelete) onDelete(trainerId);
-        })
-        .catch(err => console.error(err));
-    }
-  };
-
-  const handlePatchSubmit = async (data: { description: string }) => {
-    try {
-      const res = await api.patch(`/api/trainers/${trainerId}/`, data);
-      setTrainerState((prev) => ({ ...prev, ...res.data }));
-      setEditDialogOpen(false);
-    } catch (error) {
-      console.error("Failed to update trainer:", error);
-    }
-  };
 
   return (
     <Card
-        onClick={() => {
-            navigate(`/trainers/${id}`);
-        }}
-      sx={{
-        flex: "1 1 325px",
-        minWidth: 260,
-        maxWidth: 450,
-        height: 380,
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: 2,
-        boxShadow: 3,
-        overflow: "hidden",
-        backgroundColor: "#f9f9f9",
-        position: "relative",
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-        "&:hover": {
-          transform: "scale(1.03)",
-          boxShadow: 6,
-          cursor: "pointer"
-        }
+        onClick={() => navigate(`/trainers/${trainerId}`)}
+        sx={{
+            flex: "1 1 325px",
+            minWidth: 260,
+            maxWidth: 450,
+            height: 380,
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: 2,
+            boxShadow: 3,
+            overflow: "hidden",
+            backgroundColor: "#f9f9f9",
+            position: "relative",
+            transition: "transform 0.3s ease, box-shadow 0.3s ease",
+            "&:hover": {
+              transform: "scale(1.03)",
+              boxShadow: 6,
+              cursor: "pointer"
+            }
       }}
     >
       {role !== "member" && (
@@ -96,12 +73,6 @@ export default function TrainerCard({
           mr: 1,
           mt: 1
         }}>
-          <IconButton size="small" color="primary" onClick={() => setEditDialogOpen(true)}>
-            <EditIcon fontSize="small" />
-          </IconButton>
-          <IconButton size="small" color="error" onClick={handleDelete}>
-            <DeleteIcon fontSize="small" />
-          </IconButton>
         </Box>
       )}
 
@@ -122,15 +93,6 @@ export default function TrainerCard({
           {trainerState.description}
         </Typography>
       </CardContent>
-
-      {role !== "member" && (
-        <EditTrainerDialog
-          open={editDialogOpen}
-          onClose={() => setEditDialogOpen(false)}
-          onSubmit={handlePatchSubmit}
-          currentDescription={trainerState.description}
-        />
-      )}
     </Card>
   );
 }

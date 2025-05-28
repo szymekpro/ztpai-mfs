@@ -1,4 +1,4 @@
-import {Box, CardMedia, Chip, List, ListItem, ListItemText, Paper, Typography} from "@mui/material";
+import {Box, CardMedia, Chip, List, ListItem, ListItemText, Button, Paper, Typography} from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../api/axiosApi";
@@ -6,6 +6,9 @@ import { Trainer } from "./TrainersProps.ts";
 import { TrainerServices } from "../workouts/GymProps.ts";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import TrainerGym from "./TrainerGym";
+import EditTrainerDialog from "./EditTrainerDialog";
+
 
 export default function TrainerDetails() {
     const { id } = useParams();
@@ -13,6 +16,7 @@ export default function TrainerDetails() {
     const [availableServices, setAvailableServices] = useState<TrainerServices[]>([]);
     const [bookedMap, setBookedMap] = useState<Record<string, string[]>>({});
     const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
 
     useEffect(() => {
         const fetchTrainerData = async () => {
@@ -39,6 +43,14 @@ export default function TrainerDetails() {
     const bookedHours = bookedMap[selectedStr] || [];
 
     return (
+        <Box sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            flexWrap: "wrap",
+        }}>
         <Box
             sx={{
                 width: "100%",
@@ -150,7 +162,32 @@ export default function TrainerDetails() {
                         )}
                     </Box>
                 </Box>
+                <TrainerGym/>
             </Box>
         </Box>
-    );
+    <Box sx={{ mt: 1}}>
+        <Button
+            variant="outlined"
+            onClick={() => setEditDialogOpen(true)}
+            sx={{width: 200, height: 50}}>
+            Edit / Delete
+        </Button>
+    </Box>
+            <EditTrainerDialog
+                open={editDialogOpen}
+                onClose={() => setEditDialogOpen(false)}
+                trainer={trainer}
+                onUpdate={(updated) => {
+                    setTrainer(updated);
+                    setEditDialogOpen(false);
+                }}
+                onDelete={() => {
+                    // np. redirect or show snackbar
+                    setEditDialogOpen(false);
+                }}
+            />
+</Box>
+
+
+);
 }

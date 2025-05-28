@@ -1,14 +1,6 @@
 import { Box, Paper, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-interface Gym {
-    id: number;
-    name: string;
-    city: string;
-    address: string;
-    description: string;
-    photo_path: string;
-}
+import {Gym} from "./GymProps.ts"
 
 interface Props {
     gyms: Gym[];

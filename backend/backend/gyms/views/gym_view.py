@@ -143,6 +143,16 @@ class TrainerViewSet(ModelViewSet):
         serializer = TrainerServiceSerializer(services, many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+        summary="Trainer's available gym for clients",
+        description="Returns a gym that trainer is available on.",
+    )
+    @action(detail=True, methods=['get'], url_path='trainer-gym')
+    def trainer_gym(self, request, pk=None):
+        trainer = self.get_object()
+        serializer = GymSerializer(trainer.gym)
+        return Response(serializer.data)
+
 
 @extend_schema_view(
     list=extend_schema(

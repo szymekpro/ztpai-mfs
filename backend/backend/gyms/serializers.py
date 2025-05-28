@@ -58,6 +58,7 @@ class TrainerServiceSerializer(serializers.ModelSerializer):
 class TrainerSerializer(serializers.ModelSerializer):
     full_name = serializers.ReadOnlyField()
     availability = TrainerAvailabilitySerializer(many=True, read_only=True)
+    available_services = serializers.PrimaryKeyRelatedField(many=True, queryset=TrainerService.objects.all())
 
     class Meta:
         model = Trainer
@@ -71,6 +72,7 @@ class TrainerSerializer(serializers.ModelSerializer):
             'photo',
             'full_name',
             'availability',
+            'available_services',
         ]
         read_only_fields = [
             'id',

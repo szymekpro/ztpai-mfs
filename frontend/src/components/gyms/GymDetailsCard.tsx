@@ -2,15 +2,8 @@ import { Box, Typography, Paper } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import api from '../../api/axiosApi'; // zakładam że masz swój axios wrapper
+import {Gym} from "./GymProps.ts"
 
-interface Gym {
-    id: number;
-    name: string;
-    city: string;
-    address: string;
-    description: string;
-    photo: string;
-}
 
 export default function GymDetailsCard() {
     const { id } = useParams();
