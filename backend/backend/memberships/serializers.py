@@ -1,3 +1,6 @@
+from django.utils import timezone
+from datetime import timedelta, datetime
+
 from rest_framework import serializers
 from .models import MembershipType, UserMembership
 from django.utils.timezone import now
@@ -40,32 +43,18 @@ class UserMembershipSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'user']
 
-    def validate(self, attrs):
-        user = self.context['request'].user
-        membership_type = attrs['membership_type']
-        today = now().date()
-
-        existing = UserMembership.objects.filter(
-            user=user,
-            membership_type=membership_type,
-            is_active=True
-        ).exists()
-
-        if existing:
-            raise serializers.ValidationError(
-                "You already have an active membership of this type."
-            )
-
-        return attrs
     def to_representation(self, instance):
-        today = now().date()
+        rep = super().to_representation(instance)
+        end_date_str = rep.get('end_date')
+        today = timezone.now().date()
 
-        if instance.end_date < today:
-            instance.is_active = False
-            instance.save(update_fields=['is_active'])
+        if end_date_str:
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+            rep['expired'] = end_date < today
+        else:
+            rep['expired'] = None
 
-        return super().to_representation(instance)
-
+        return rep
 
 
 

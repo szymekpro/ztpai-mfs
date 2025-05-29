@@ -1,3 +1,6 @@
+from django.utils import timezone
+from datetime import timedelta
+
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -9,7 +12,6 @@ from drf_spectacular.utils import (
 from ..models import MembershipType, UserMembership
 from payments.models import Payment
 from ..serializers import MembershipTypeSerializer, UserMembershipSerializer
-from django.utils.timezone import now
 
 
 @extend_schema_view(
@@ -88,13 +90,38 @@ class UserMembershipViewSet(ModelViewSet):
         return UserMembership.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        user_membership = serializer.save(user=self.request.user)
-        amount = user_membership.membership_type.price
-        description = f"Payment for membership: {user_membership.membership_type.name}"
+        user = self.request.user
+        membership_type = serializer.validated_data['membership_type']
+
+        existing = UserMembership.objects.filter(
+            user=user,
+            membership_type=membership_type,
+            is_active=False
+        ).first()
+
+        start_date = timezone.now().date()
+        end_date = start_date + timedelta(days=30)
+
+        if existing:
+            existing.start_date = start_date
+            existing.end_date = end_date
+            existing.is_active = True
+            existing.save()
+            user_membership = existing
+        else:
+            user_membership = serializer.save(
+                user=user,
+                start_date=start_date,
+                end_date=end_date,
+                is_active=True,
+            )
+
+        amount = membership_type.price
+        description = f"Payment for membership: {membership_type.name}"
         content_type = ContentType.objects.get_for_model(user_membership)
 
         Payment.objects.create(
-            user=self.request.user,
+            user=user,
             amount=amount,
             status="pending",
             description=description,
