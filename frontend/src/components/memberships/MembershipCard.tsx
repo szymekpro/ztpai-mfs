@@ -46,7 +46,7 @@ export default function MembershipCard() {
                     sx={{
                         flex: '1 1 300px',
                         minWidth: 200,
-                        maxWidth: '100%',
+                        maxWidth: 460,
                         display: 'flex',
                         flexDirection: 'row',
                         alignItems: 'center',
