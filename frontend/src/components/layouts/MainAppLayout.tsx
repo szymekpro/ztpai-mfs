@@ -78,14 +78,21 @@ export default function MainAppLayout() {
                     },
                 }}
             >
-                <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    m: 2,
-                    mt: 4,
-                    zIndex: 1200,
-                    height: 50,
-                }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        px: 4,
+                        py: 2,
+                        backgroundColor: '#ffffff',
+                        boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+                        zIndex: 1200,
+                        position: 'sticky',
+                        top: 0,
+                        height: 55,
+                    }}
+                >
                     <img src="../../../public/logo-zoom.png" alt="Logo" style={{
                         width: 128,
                         height: 128,
