@@ -53,6 +53,25 @@ class GymViewSet(ModelViewSet):
         cities = Gym.objects.values_list("city", flat=True).distinct()
         return Response(cities)
 
+    @extend_schema(
+        summary="List of trainers for a gym",
+        description="Returns a list of trainers working at a specific gym.",
+        responses={
+            200: OpenApiResponse(description="List of trainers", response=TrainerSerializer(many=True)),
+            404: OpenApiResponse(description="Gym not found")
+        }
+    )
+    @action(detail=True, methods=["get"], url_path="trainers")
+    def list_gym_trainers(self, request, pk=None):
+        try:
+            gym = self.get_object()
+        except Gym.DoesNotExist:
+            return Response({"detail": "Gym not found."}, status=404)
+
+        trainers = gym.trainers.all()
+        serializer = TrainerSerializer(trainers, many=True, context={"request": request})
+        return Response(serializer.data)
+
 
 @extend_schema_view(
     list=extend_schema(
