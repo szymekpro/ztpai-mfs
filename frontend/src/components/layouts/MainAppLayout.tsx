@@ -122,40 +122,49 @@ export default function MainAppLayout() {
                 </Box>
             </Box>
 
-            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-  <DialogTitle>Select a gym</DialogTitle>
-  <DialogContent>
-    <List>
-      {gyms.map((gym) => (
-        <ListItemButton
-          key={gym.id}
-          onClick={() => handleGymSelect(gym)}
-          sx={{
-            borderRadius: 2,
-            mb: 1,
-            backgroundColor: '#f0f4f8',
-            '&:hover': {
-              backgroundColor: '#dbeafe',
-            },
-            '&.Mui-selected': {
-              backgroundColor: '#c7d2fe',
-            },
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: '1rem',
-              fontWeight: 500,
-              color: '#1e293b',
-            }}
-          >
-            {gym.name}
-          </Typography>
-        </ListItemButton>
-      ))}
-    </List>
-  </DialogContent>
-</Dialog>
+            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="xs" fullWidth>
+                <DialogTitle sx={{ backgroundColor: '#fff', fontWeight: 'bold' }}>
+                    Select a gym
+                </DialogTitle>
+                <DialogContent
+                    sx={{
+                        backgroundColor: '#fff',
+                        boxShadow: 4,
+                        borderRadius: 2,
+                        p: 2,
+                    }}
+                >
+                    <List>
+                      {gyms.map((gym) => (
+                        <ListItemButton
+                          key={gym.id}
+                          onClick={() => handleGymSelect(gym)}
+                          sx={{
+                            borderRadius: 2,
+                            mb: 1,
+                            backgroundColor: '#f0f4f8',
+                            '&:hover': {
+                              backgroundColor: '#dbeafe',
+                            },
+                            '&.Mui-selected': {
+                              backgroundColor: '#c7d2fe',
+                            },
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: '1rem',
+                              fontWeight: 500,
+                              color: '#1e293b',
+                            }}
+                          >
+                            {gym.name}
+                          </Typography>
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  </DialogContent>
+                </Dialog>
 
         </Box>
     );

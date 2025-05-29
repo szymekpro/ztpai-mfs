@@ -37,7 +37,7 @@ export default function GymDetails() {
             <GymDetailsCard gym={gym} />
 
             {!isMember && (
-                <Box sx={{ mt: 3 }}>
+                <Box sx={{ mt: 3 , maxWidth: '90vw', display: 'flex', justifyContent: 'center'}}>
                     <Button
                         variant="outlined"
                         color="primary"
