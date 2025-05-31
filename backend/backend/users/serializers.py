@@ -23,7 +23,13 @@ class UsersSerializer(ModelSerializer):
             "postal_code",
             "role",
         ]
-        read_only_fields = fields
+        read_only_fields = ["role"]
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
 
     def create(self, validated_data):
         user = CustomUser.objects.create_user(**validated_data)

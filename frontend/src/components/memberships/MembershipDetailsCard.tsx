@@ -153,17 +153,6 @@ export default function MembershipDetailsCard() {
               }}}>
               Terms of use
           </Button>
-          <Button variant="contained" sx={{
-              backgroundColor: '#1976d2',
-              color: '#fff',
-              height: 48,
-              width: 196,
-              '&:hover': {
-                    backgroundColor: '#115293',
-              }
-        }}>
-              Check our offer
-          </Button>
 
     </Box>
       </Box>
