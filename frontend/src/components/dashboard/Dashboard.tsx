@@ -5,6 +5,7 @@ import {UserMembership} from "../memberships/UserMembershipProp.ts";
 import api from "../../api/axiosApi.ts";
 import {Box, Card, CardContent, Chip, CircularProgress, Divider, Typography} from "@mui/material";
 import {User} from "../user/UserProps.ts"
+import TrainingTimeline from "./TrainingTimeline.tsx";
 
 
 export default function Dashboard() {
@@ -163,20 +164,9 @@ export default function Dashboard() {
                 </Card>
             </Box>
 
-
             <Card sx={{ width: '100%', minHeight: 180, bgcolor: '#f8fafc', borderRadius: 3, boxShadow: 2 }}>
                 <CardContent>
-                    <Typography variant="h6" fontWeight="bold">Calendar</Typography>
-                    <Divider sx={{ my: 1 }} />
-                    {trainings.length > 0 ? (
-                        trainings.slice(0, 4).map(t => (
-                            <Typography key={t.id} fontSize={14}>
-                                {new Date(t.start_time).toLocaleString()}
-                            </Typography>
-                        ))
-                    ) : (
-                        <Typography color="text.secondary">No upcoming trainings.</Typography>
-                    )}
+                    <TrainingTimeline trainings={trainings} />
                 </CardContent>
             </Card>
         </Box>
