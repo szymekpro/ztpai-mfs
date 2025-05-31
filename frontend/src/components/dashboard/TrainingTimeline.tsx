@@ -7,13 +7,11 @@ import {
     Stack,
     Card,
     CardContent,
-    useTheme
 } from "@mui/material";
 import { ArrowBackIos, ArrowForwardIos } from "@mui/icons-material";
 import {
     format,
     addWeeks,
-    subWeeks,
     startOfWeek,
     endOfWeek,
     isWithinInterval
@@ -26,7 +24,6 @@ type Props = {
 
 export default function TrainingTimeline({ trainings }: Props) {
     const [weekOffset, setWeekOffset] = useState(0);
-    const theme = useTheme();
 
     const today = new Date();
     const currentWeekStart = startOfWeek(addWeeks(today, weekOffset), { weekStartsOn: 1 });
@@ -60,24 +57,31 @@ export default function TrainingTimeline({ trainings }: Props) {
 
             <Divider sx={{ mb: 2 }} />
 
-            <Box sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                p: '0 32px 0 32px',
-                gap: 4,
-            }}>
-                {weekTrainings.map(t => {
+            <Box
+                sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "flex-start",
+                    gap: 2,
+                    px: { xs: 1, sm: 2, md: 4 },
+                }}
+            >
+                {weekTrainings.map((t) => {
                     const date = new Date(t.start_time);
                     const bgColor =
-                        t.status === "completed" ? '#e6f4ea' :
-                            t.status === "cancelled" ? '#fbe9e7' :
-                                '#f4f7fa';
+                        t.status === "completed" ? "#e6f4ea" :
+                            t.status === "cancelled" ? "#fbe9e7" :
+                                "#f4f7fa";
 
                     return (
                         <Card
                             key={t.id}
                             sx={{
-                                width: '100%',
+                                width: {
+                                    xs: "100%",
+                                    sm: "calc(50% - 16px)",
+                                    md: "calc(33.333% - 18px)",
+                                },
                                 bgcolor: bgColor,
                                 borderRadius: 3,
                                 boxShadow: 1,
@@ -93,16 +97,14 @@ export default function TrainingTimeline({ trainings }: Props) {
                                 <Typography fontSize={14}>
                                     Coach: {t.trainer?.first_name ?? "Unknown"}
                                 </Typography>
-
                                 <Typography fontSize={13} color="text.secondary">
-                                    {t.service_type?.name}
+                                    {t.service_type?.name ?? ""}
                                 </Typography>
                             </CardContent>
                         </Card>
                     );
                 })}
             </Box>
-
         </Box>
     );
 }

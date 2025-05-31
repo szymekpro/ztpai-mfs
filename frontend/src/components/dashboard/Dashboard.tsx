@@ -64,8 +64,21 @@ export default function Dashboard() {
                 </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', gap: 3, width: '100%' }}>
-                <Card sx={{ width: '50%', minHeight: 220, bgcolor: '#f8fafc', borderRadius: 6, boxShadow: 2 }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', md: 'row' },
+                    gap: 3,
+                    width: '100%',
+                }}
+            >
+                <Card sx={{
+                    width: { xs: '100%', md: '50%' },
+                    minHeight: 220,
+                    bgcolor: '#f8fafc',
+                    borderRadius: 6,
+                    boxShadow: 2,
+                }}>
                     <CardContent>
                         <Typography variant="h6" fontWeight="bold">Memberships</Typography>
                         <Divider sx={{ my: 1 }} />
@@ -115,7 +128,13 @@ export default function Dashboard() {
 
 
 
-                <Card sx={{ width: '50%', minHeight: 220, bgcolor: '#f8fafc', borderRadius: 6, boxShadow: 2 }}>
+                <Card sx={{
+                    width: { xs: '100%', md: '50%' },
+                    minHeight: 220,
+                    bgcolor: '#f8fafc',
+                    borderRadius: 6,
+                    boxShadow: 2,
+                }}>
                     <CardContent>
                         <Typography variant="h6" fontWeight="bold">Last Payments</Typography>
                         <Divider sx={{ my: 1 }} />
