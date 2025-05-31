@@ -164,7 +164,7 @@ export default function Dashboard() {
                 </Card>
             </Box>
 
-            <Card sx={{ width: '100%', minHeight: 180, bgcolor: '#f8fafc', borderRadius: 3, boxShadow: 2 }}>
+            <Card sx={{ width: '100%', minHeight: 180, bgcolor: '#f8fafc', borderRadius: 5, boxShadow: 2 }}>
                 <CardContent>
                     <TrainingTimeline trainings={trainings} />
                 </CardContent>

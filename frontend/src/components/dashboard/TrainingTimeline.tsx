@@ -43,7 +43,7 @@ export default function TrainingTimeline({ trainings }: Props) {
 
     return (
         <Box sx={{ width: "100%" }}>
-            {/* Nagłówek z nawigacją */}
+
             <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="h6" fontWeight="bold">
                     Trainings ({format(currentWeekStart, "MMM d")} – {format(currentWeekEnd, "MMM d")})
@@ -87,17 +87,16 @@ export default function TrainingTimeline({ trainings }: Props) {
                                 <Typography fontWeight="bold" fontSize={15}>
                                     {format(date, "EEEE, HH:mm")}
                                 </Typography>
-                                <Typography fontSize={14} color="text.secondary" sx={{ mb: 1 }}>
+                                <Typography fontSize={14} color="text.secondary" sx={{ mb: 2 }}>
                                     {format(date, "MMM d, yyyy")}
                                 </Typography>
                                 <Typography fontSize={14}>
                                     Coach: {t.trainer?.first_name ?? "Unknown"}
                                 </Typography>
-                                {t.description && (
-                                    <Typography fontSize={13} color="text.secondary">
-                                        {t.description}
-                                    </Typography>
-                                )}
+
+                                <Typography fontSize={13} color="text.secondary">
+                                    {t.service_type?.name}
+                                </Typography>
                             </CardContent>
                         </Card>
                     );
