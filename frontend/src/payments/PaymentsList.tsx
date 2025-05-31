@@ -14,14 +14,8 @@ import dayjs from "dayjs";
 import api from "../api/axiosApi";
 import EditPaymentDialog from "./EditPaymentDialog.tsx";
 import {useUserRole} from "../hooks/useUserRole.ts";
+import {Payment} from "./PaymentProps.ts"
 
-interface Payment {
-  id: number;
-  amount: number;
-  status: "paid" | "pending" | "failed" | "refunded";
-  description: string;
-  created_at: string;
-}
 
 export default function PaymentsList() {
   const [payments, setPayments] = useState<Payment[]>([]);

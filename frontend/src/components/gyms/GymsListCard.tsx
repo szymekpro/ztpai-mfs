@@ -19,7 +19,7 @@ export default function GymListCard({ gyms }: Props) {
         <Box
             sx={{
                 mt: 4,
-                ml: 8,
+                ml: 4,
                 mr: 8,
             }}
         >
@@ -40,6 +40,7 @@ export default function GymListCard({ gyms }: Props) {
 
                             sx={{
                                 display: 'flex',
+                                minWidth: 250,
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
                                 p: 2,

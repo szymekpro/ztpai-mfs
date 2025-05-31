@@ -1,10 +1,11 @@
 from django.shortcuts import get_object_or_404 # type: ignore
+from rest_framework.decorators import action
 
 from ..models import CustomUser
 from ..serializers import UsersSerializer, RegisterSerializer
 from rest_framework.response import Response # type: ignore
 from rest_framework.views import APIView # type: ignore
-from rest_framework.permissions import AllowAny # type: ignore
+from rest_framework.permissions import AllowAny, IsAuthenticated  # type: ignore
 from rest_framework import status, generics  # type: ignore
 from rest_framework.viewsets import ModelViewSet # type: ignore
 from drf_spectacular.utils import extend_schema
@@ -27,3 +28,8 @@ class RegisterView(APIView):
 class UserViewSet(ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UsersSerializer
+
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data)
