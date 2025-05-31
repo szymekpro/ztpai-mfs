@@ -3,9 +3,10 @@ import {TrainingHistoryProps} from "../workouts/GymProps.ts";
 import {Payment} from "../../payments/PaymentProps.ts";
 import {UserMembership} from "../memberships/UserMembershipProp.ts";
 import api from "../../api/axiosApi.ts";
-import {Box, Card, CardContent, Chip, CircularProgress, Divider, Typography} from "@mui/material";
+import {Box, Card, CardContent, CircularProgress, Divider, Typography} from "@mui/material";
 import {User} from "../user/UserProps.ts"
 import TrainingTimeline from "./TrainingTimeline.tsx";
+import {useNavigate} from "react-router-dom";
 
 
 export default function Dashboard() {
@@ -14,6 +15,7 @@ export default function Dashboard() {
     const [payments, setPayments] = useState<Payment[]>([]);
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,6 +26,7 @@ export default function Dashboard() {
                     api.get("/api/payments/"),
                     api.get("/api/users/me/"),
                 ]);
+
                 setMembership(membershipRes.data);
                 setTrainings(trainingsRes.data);
                 setPayments(paymentsRes.data);
@@ -34,7 +37,6 @@ export default function Dashboard() {
                 setLoading(false);
             }
         };
-
         fetchData();
     }, []);
 
@@ -57,6 +59,12 @@ export default function Dashboard() {
                 borderRadius: 3,
                 boxShadow: 2,
                 p: 3,
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                    transform: 'scale(1.03)',
+                    boxShadow: 6,
+                    cursor: 'pointer',
+                },
             }}>
                 <Box>
                     <Typography variant="h5" fontWeight="bold" mb={2}>Welcome, {user?.first_name}</Typography>
@@ -72,12 +80,18 @@ export default function Dashboard() {
                     width: '100%',
                 }}
             >
-                <Card sx={{
+                <Card onClick={() => navigate(`/memberships/`)} sx={{
                     width: { xs: '100%', md: '50%' },
                     minHeight: 220,
                     bgcolor: '#f8fafc',
                     borderRadius: 6,
                     boxShadow: 2,
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                    '&:hover': {
+                        transform: 'scale(1.03)',
+                        boxShadow: 6,
+                        cursor: 'pointer',
+                    },
                 }}>
                     <CardContent>
                         <Typography variant="h6" fontWeight="bold">Memberships</Typography>
@@ -128,12 +142,19 @@ export default function Dashboard() {
 
 
 
-                <Card sx={{
+                <Card onClick={() => navigate(`/payments/`)}
+                    sx={{
                     width: { xs: '100%', md: '50%' },
                     minHeight: 220,
                     bgcolor: '#f8fafc',
                     borderRadius: 6,
                     boxShadow: 2,
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                    '&:hover': {
+                        transform: 'scale(1.03)',
+                        boxShadow: 6,
+                        cursor: 'pointer',
+                    },
                 }}>
                     <CardContent>
                         <Typography variant="h6" fontWeight="bold">Last Payments</Typography>
@@ -183,7 +204,20 @@ export default function Dashboard() {
                 </Card>
             </Box>
 
-            <Card sx={{ width: '100%', minHeight: 180, bgcolor: '#f8fafc', borderRadius: 5, boxShadow: 2 }}>
+            <Card onClick={() => navigate(`/workouts/`)}
+                sx={{
+                width: '100%',
+                minHeight: 180,
+                bgcolor: '#f8fafc',
+                borderRadius: 5,
+                boxShadow: 2,
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                    transform: 'scale(1.03)',
+                    boxShadow: 6,
+                    cursor: 'pointer',
+                },
+            }}>
                 <CardContent>
                     <TrainingTimeline trainings={trainings} />
                 </CardContent>

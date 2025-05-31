@@ -5,7 +5,7 @@ export default function HomePage() {
 
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', p: 4, gap: 4 , justifyContent: 'center', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4, mb: 2, gap: 4 , justifyContent: 'center', alignItems: 'center' }}>
             <Dashboard></Dashboard>
         </Box>
     );
