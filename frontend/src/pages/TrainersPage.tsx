@@ -8,9 +8,10 @@ export default function TrainersPage() {
             sx={{
                 display: "flex",
                 flexDirection: "column",
+                padding: 4,
             }}
         >
-            <Typography variant="h6" sx={{ mb: 1 }}>
+            <Typography variant="h5" sx={{ mb: 1 }}>
                 Our Trainers on all gyms:
             </Typography>
             <TrainersList />

@@ -188,7 +188,6 @@ console.log(isMember)
                     setEditDialogOpen(false);
                 }}
                 onDelete={() => {
-                    // np. redirect or show snackbar
                     setEditDialogOpen(false);
                 }}
             />

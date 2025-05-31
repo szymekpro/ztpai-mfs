@@ -54,7 +54,7 @@ export default function TrainerGym() {
                     {gym.name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {gym.description}
+                    {gym.city}, {gym.address}
                 </Typography>
             </Paper>
         </Box>

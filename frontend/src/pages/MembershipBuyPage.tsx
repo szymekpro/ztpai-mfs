@@ -6,7 +6,13 @@ export default function MembershipBuyPage() {
 
 
     return (
-        <Box sx={{display: "flex", justifyContent: "center", flexDirection: "column",width: "100%", height: "100%"}}>
+        <Box sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            width: "100%",
+            height: "100%",
+        }}>
             <MembershipBuyCard>
 
             </MembershipBuyCard>

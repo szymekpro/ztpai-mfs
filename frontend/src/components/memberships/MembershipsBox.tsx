@@ -15,7 +15,7 @@ export default function MembershipsBox({ children }: Props): JSX.Element {
             flexWrap: 'wrap',
             width: '90vw',
             height: 'auto',
-            padding: 2,
+            padding: 4,
 
         }}>
             {children}

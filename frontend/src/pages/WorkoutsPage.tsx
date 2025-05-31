@@ -24,7 +24,7 @@ export default function WorkoutsPage() {
                 alignItems: "center",
                 gap: 6,
                 flexDirection: "row",
-                padding: 6,
+                padding: 4,
             }}
         >
             <TrainingHistory />

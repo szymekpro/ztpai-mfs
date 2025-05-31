@@ -7,10 +7,9 @@ import {
     Select,
     MenuItem,
 } from "@mui/material";
-import TrainingsCard from "./TrainingsCard.tsx";
 import { useEffect, useState } from "react";
 import api from "../../api/axiosApi.ts";
-import { TrainingHistoryProps, TrainerServices } from "GymProps.ts";
+import { TrainingHistoryProps} from "GymProps.ts";
 import TrainingCard from "./TrainingCard.tsx";
 import dayjs from "dayjs";
 
@@ -89,27 +88,27 @@ export default function TrainingHistory() {
                     alignItems: "center",
                     gap: 3,
                     mt: 1,
-                    mb: 3,
+                    mb: 5,
                 }}
             >
                 <Typography variant="h6" >Your Training History:</Typography>
-                {monthsList.length > 0 && (
-                    <FormControl size="small">
-                        <InputLabel>Month</InputLabel>
-                        <Select
-                            value={monthFilter}
-                            label="Month"
-                            onChange={(e) => setMonthFilter(e.target.value)}
-                            sx={{ minWidth: 150 }}
-                        >
-                            {monthsList.map((month) => (
-                                <MenuItem key={month} value={month}>
-                                    {dayjs(month).format("MMMM YYYY")}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                )}
+                    {monthsList.length > 0 && (
+                        <FormControl size="small">
+                            <InputLabel>Month</InputLabel>
+                            <Select
+                                value={monthFilter}
+                                label="Month"
+                                onChange={(e) => setMonthFilter(e.target.value)}
+                                sx={{ minWidth: 150 }}
+                            >
+                                {monthsList.map((month) => (
+                                    <MenuItem key={month} value={month}>
+                                        {dayjs(month).format("MMMM YYYY")}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
             </Box>
 
             {filteredTrainings.length === 0 ? (
@@ -117,13 +116,15 @@ export default function TrainingHistory() {
                     No trainings found for this month.
                 </Typography>
             ) : (
-                <Grid container spacing={4}>
-                    {filteredTrainings.map((training) => (
-                        <Grid item xs={12} sm={6} md={4} key={training.id}>
-                            <TrainingCard training={training} onCancel={handleCancelTraining} />
-                        </Grid>
-                    ))}
-                </Grid>
+                <Box ml={2}>
+                    <Grid container spacing={4}>
+                        {filteredTrainings.map((training) => (
+                            <Grid item xs={12} sm={6} md={4} key={training.id}>
+                                <TrainingCard training={training} onCancel={handleCancelTraining} />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
             )}
         </Box>
     );

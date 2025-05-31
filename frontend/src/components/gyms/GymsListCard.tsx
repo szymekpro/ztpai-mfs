@@ -18,14 +18,27 @@ export default function GymListCard({ gyms }: Props) {
     return (
         <Box
             sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
                 mt: 4,
-                ml: 4,
-                mr: 8,
             }}
         >
             {Object.entries(groupedGyms).map(([city, gymsInCity]) => (
-                <Box key={city} sx={{ mb: 4 }}>
-                    <Typography variant="h5" sx={{ mb: 1 }}>
+                <Box
+                    key={city}
+                    sx={{
+                        width: "100%",
+                        maxWidth: 1000,
+                        mb: 4,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Typography variant="h5" sx={{ mb: 2, alignSelf: 'flex-start' }}>
                         {city}
                     </Typography>
 
@@ -37,16 +50,16 @@ export default function GymListCard({ gyms }: Props) {
                                 localStorage.setItem("selectedGymName", gym.name);
                                 navigate(`/gyms/${gym.id}`);
                             }}
-
                             sx={{
                                 display: 'flex',
-                                minWidth: 250,
+                                width: '100%',
                                 alignItems: 'center',
                                 justifyContent: 'space-between',
                                 p: 2,
-                                borderRadius: 3,
+                                borderRadius: 4,
                                 backgroundColor: '#ffffff',
                                 mb: 1,
+                                ml: 3,
                                 cursor: 'pointer',
                                 transition: 'transform 0.2s, box-shadow 0.2s',
                                 '&:hover': {
@@ -59,7 +72,6 @@ export default function GymListCard({ gyms }: Props) {
                                 sx={{
                                     display: 'flex',
                                     flexDirection: 'row',
-                                    justifyContent: 'flex-start',
                                     alignItems: 'center',
                                     gap: 4,
                                 }}
@@ -76,5 +88,6 @@ export default function GymListCard({ gyms }: Props) {
                 </Box>
             ))}
         </Box>
+
     );
 }

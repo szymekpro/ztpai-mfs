@@ -20,7 +20,7 @@ export default function MembershipsPage() {
         <>
 
             <MembershipsBox>
-                <Typography
+                <Typography variant="h5"
                     sx={{
                         fontSize: '24px',
                         fontWeight: 'bold',
@@ -29,16 +29,14 @@ export default function MembershipsPage() {
                 > Your active memberships:</Typography>
 
                 <MembershipCard/>
-                <Typography
-                    sx={{
-                        fontSize: '24px',
-                        fontWeight: 'bold',
-                        marginBottom: '16px',
-                    }}
-                > Buy a new membership</Typography>
-                <Typography variant="body1" color="text.secondary">
-                    Our current offer:
-                </Typography>
+                <Box sx={{display: 'flex', flexDirection: "row", alignItems: 'center',}}>
+                    <Typography variant="h5"
+                        sx={{
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                        }}
+                    > Our current membership offer:   </Typography>
+                </Box>
 
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', mt: 4, width: '100%'}}>
                     {membershipTypes.map((m) => (
