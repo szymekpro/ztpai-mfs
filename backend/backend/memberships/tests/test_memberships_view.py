@@ -182,6 +182,17 @@ def test_put_user_membership(authenticated_client, sample_user_membership, test_
     assert sample_user_membership.is_active is False
 
 @pytest.mark.django_db
+def test_put_user_membership_not_found(authenticated_client):
+    payload = {
+        "start_date": "2024-01-01",
+        "end_date": "2024-02-01",
+        "is_active": False
+    }
+    response = authenticated_client.put("/api/user-memberships/9999/", data=payload)
+    assert response.status_code == 404
+
+
+@pytest.mark.django_db
 def test_delete_user_membership(authenticated_client, sample_user_membership):
     response = authenticated_client.delete(f"/api/user-memberships/{sample_user_membership.id}/")
     assert response.status_code == 204
@@ -191,3 +202,23 @@ def test_delete_user_membership(authenticated_client, sample_user_membership):
 def test_delete_user_membership_not_found(authenticated_client):
     response = authenticated_client.delete("/api/user-memberships/9999/")
     assert response.status_code == 404
+
+@pytest.mark.django_db
+def test_get_my_memberships(authenticated_client, sample_user_membership):
+    response = authenticated_client.get("/api/membership-types/my-memberships/")
+    assert response.status_code == 200
+    assert isinstance(response.data, list)
+    assert len(response.data) == 1
+    assert response.data[0]["membership_type"]["id"] == sample_user_membership.membership_type.id
+
+@pytest.mark.django_db
+def test_has_active_membership_true(authenticated_client, sample_user_membership):
+    response = authenticated_client.get("/api/user-memberships/active/")
+    assert response.status_code == 200
+    assert response.data == {"has_membership": True}
+
+@pytest.mark.django_db
+def test_has_active_membership_false(authenticated_client):
+    response = authenticated_client.get("/api/user-memberships/active/")
+    assert response.status_code == 200
+    assert response.data == {"has_membership": False}
