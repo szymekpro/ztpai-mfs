@@ -17,27 +17,36 @@ from ..serializers import MembershipTypeSerializer, UserMembershipSerializer
 @extend_schema_view(
     list=extend_schema(
         summary="List all membership types",
-        description="Returns a list of all available membership types."
+        description="Returns a list of all available membership types.",
+        responses={200: MembershipTypeSerializer(many=True)}
     ),
     retrieve=extend_schema(
         summary="Retrieve membership type details",
-        description="Returns details of a specific membership type."
+        description="Returns details of a specific membership type.",
+        responses={200: MembershipTypeSerializer}
     ),
     create=extend_schema(
         summary="Create a new membership type",
-        description="Creates a new membership type with duration, price and description."
+        description="Creates a new membership type with duration, price and description.",
+        request=MembershipTypeSerializer,
+        responses={201: MembershipTypeSerializer}
     ),
     update=extend_schema(
         summary="Update a membership type",
-        description="Updates an existing membership type."
+        description="Updates an existing membership type.",
+        request=MembershipTypeSerializer,
+        responses={200: MembershipTypeSerializer}
     ),
     partial_update=extend_schema(
         summary="Partially update a membership type",
-        description="Partially updates fields of a membership type."
+        description="Partially updates fields of a membership type.",
+        request=MembershipTypeSerializer,
+        responses={200: MembershipTypeSerializer}
     ),
     destroy=extend_schema(
         summary="Delete a membership type",
-        description="Deletes a membership type from the system."
+        description="Deletes a membership type from the system.",
+        responses={204: OpenApiResponse(description="No Content")}
     ),
 )
 class MembershipTypeViewSet(ModelViewSet):
@@ -59,26 +68,37 @@ class MembershipTypeViewSet(ModelViewSet):
 @extend_schema_view(
     list=extend_schema(
         summary="List user's memberships",
-        description="Returns all memberships that belong to the currently authenticated user."
+        description="Returns all memberships that belong to the currently authenticated user.",
+        responses={200: UserMembershipSerializer(many=True)}
     ),
     retrieve=extend_schema(
         summary="Get membership details",
-        description="Returns detailed info about a specific user membership."
+        description="Returns detailed info about a specific user membership.",
+        responses={200: UserMembershipSerializer}
     ),
     create=extend_schema(
         summary="Create a user membership",
-        description="Creates a membership and assigns it to the currently authenticated user."
+        description="Creates a membership and assigns it to the currently authenticated user. "
+                    "Also generates a pending payment for this membership.",
+        request=UserMembershipSerializer,
+        responses={201: UserMembershipSerializer}
     ),
     update=extend_schema(
         summary="Update user membership",
-        description="Updates an existing user membership."
+        description="Updates an existing user membership.",
+        request=UserMembershipSerializer,
+        responses={200: UserMembershipSerializer}
     ),
     partial_update=extend_schema(
-        summary="Partially update user membership"
+        summary="Partially update user membership",
+        description="Partially updates fields of a user membership.",
+        request=UserMembershipSerializer,
+        responses={200: UserMembershipSerializer}
     ),
     destroy=extend_schema(
         summary="Delete a user membership",
-        description="Deletes a user membership record."
+        description="Deletes a user membership record.",
+        responses={204: OpenApiResponse(description="No Content")}
     ),
 )
 class UserMembershipViewSet(ModelViewSet):
@@ -129,8 +149,12 @@ class UserMembershipViewSet(ModelViewSet):
             object_id=user_membership.id,
         )
 
+    @extend_schema(
+        summary="Check if user has active membership",
+        description="Returns whether the currently authenticated user has an active membership.",
+        responses={200: OpenApiResponse(description='{"has_membership": true/false}')}
+    )
     @action(detail=False, methods=["get"], url_path="active")
     def has_active_membership(self, request):
-        active = self.get_queryset().filter(
-            is_active=True).exists()
+        active = self.get_queryset().filter(is_active=True).exists()
         return Response({"has_membership": active})
