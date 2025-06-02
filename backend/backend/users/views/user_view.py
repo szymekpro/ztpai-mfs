@@ -10,6 +10,20 @@ from rest_framework import status, generics  # type: ignore
 from rest_framework.viewsets import ModelViewSet # type: ignore
 from drf_spectacular.utils import extend_schema
 
+
+from rest_framework.permissions import BasePermission, SAFE_METHODS
+
+class IsAdminOrEmployeeOrSelf(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.user.role in ("admin", "employee"):
+            return True
+        return obj == request.user
+
+    def has_permission(self, request, view):
+        if view.action in ["list", "retrieve", "destroy", "update", "partial_update"]:
+            return request.user.is_authenticated and request.user.role in ("admin", "employee")
+        return request.user.is_authenticated
+
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
@@ -28,8 +42,16 @@ class RegisterView(APIView):
 class UserViewSet(ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UsersSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrEmployeeOrSelf]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role in ("admin", "employee"):
+            return CustomUser.objects.all()
+        return CustomUser.objects.filter(id=user.id)
 
     @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def me(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+
