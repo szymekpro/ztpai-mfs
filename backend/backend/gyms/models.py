@@ -11,6 +11,12 @@ class Gym(models.Model):
     def __str__(self):
         return f"{self.name} ({self.city})"
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['city']),
+            models.Index(fields=['name']),
+        ]
+
 
 class TrainerService(models.Model):
     name = models.CharField(max_length=100)
@@ -19,6 +25,12 @@ class TrainerService(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['price']),
+            models.Index(fields=['name']),
+        ]
 
 class Trainer(models.Model):
     first_name = models.CharField(max_length=50)
@@ -36,5 +48,9 @@ class Trainer(models.Model):
     def full_name(self):
         return f"{self.last_name} {self.first_name}"
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['gym']),
+        ]
 
 

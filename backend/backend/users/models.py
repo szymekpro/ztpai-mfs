@@ -64,3 +64,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             self.is_staff = False
             self.is_superuser = False
         super().save(*args, **kwargs)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["role"]),
+            models.Index(fields=["is_active"]),
+        ]

@@ -21,3 +21,12 @@ class ScheduledTraining(models.Model):
 
     def __str__(self):
         return f"{self.user.email} with {self.trainer} at {self.start_time.strftime('%Y-%m-%d %H:%M')}"
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user"]),
+            models.Index(fields=["trainer"]),
+            models.Index(fields=["gym"]),
+            models.Index(fields=["start_time"]),
+            models.Index(fields=["status"]),
+        ]

@@ -12,6 +12,11 @@ class MembershipType(models.Model):
     def __str__(self):
         return f"{self.name} ({self.duration_days} dni) – {self.price} zł"
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["price"]),
+        ]
+
 
 class UserMembership(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='memberships')
@@ -22,3 +27,10 @@ class UserMembership(models.Model):
 
     def __str__(self):
         return f"{self.user.email} – {self.membership_type.name} ({self.start_date} → {self.end_date})"
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user"]),
+            models.Index(fields=["is_active"]),
+            models.Index(fields=["start_date", "end_date"]),
+        ]
