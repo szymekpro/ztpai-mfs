@@ -38,7 +38,7 @@ export default function PaymentsList() {
     current = current.add(1, "month");
   }
 
-  const { role, isMember } = useUserRole();
+  const { role} = useUserRole();
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -165,9 +165,11 @@ export default function PaymentsList() {
             <Typography variant="h6">
               {payment.description || "No description"}
             </Typography>
-            <IconButton onClick={() => handleEditClick(payment)} size="small">
-              <EditIcon fontSize="small" />
-            </IconButton>
+            {role !== "member" && (
+              <IconButton onClick={() => handleEditClick(payment)} size="small">
+                <EditIcon fontSize="small" />
+              </IconButton>
+            )}
           </Box>
 
           <Typography variant="body1" fontWeight={600}>
@@ -259,7 +261,7 @@ export default function PaymentsList() {
         </Grid>
       )}
 
-      {!isMember && (
+      {role !== "member" && (
         <EditPaymentDialog
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}

@@ -30,6 +30,7 @@ def test_user():
     user = User.objects.create_user(
         email='testuser@gmail.com',
         password='123',
+        role='member',
     )
     return user
 

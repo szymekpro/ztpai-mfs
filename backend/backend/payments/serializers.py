@@ -10,6 +10,8 @@ class PaymentsSerializer(serializers.ModelSerializer):
             'amount',
             'status',
             'description',
+            'content_type',
+            'object_id',
         ]
         read_only_fields = [
             'id'
