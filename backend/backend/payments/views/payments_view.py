@@ -13,16 +13,61 @@ from rest_framework.viewsets import ModelViewSet
 @extend_schema_view(
     list=extend_schema(
         summary="List user payments",
-        description="Returns all payments made by the currently authenticated user."
+        description="Returns all payments made by the currently authenticated user. "
+                    "Members see only their own payments.",
+        responses={200: PaymentsSerializer(many=True)}
     ),
     retrieve=extend_schema(
         summary="Get payment details",
-        description="Returns detailed info about a specific payment."
+        description="Returns detailed info about a specific payment. "
+                    "Members can access only their own payments.",
+        responses={
+            200: PaymentsSerializer,
+            403: OpenApiResponse(description="Forbidden"),
+            404: OpenApiResponse(description="Not Found"),
+        }
     ),
-    patch=extend_schema(
-        summary="Patch payment details",
-        description="Patch payment details made by the currently authenticated employee/admin."
-))
+    create=extend_schema(
+        summary="Create payment",
+        description="Create a new payment. Only admins and employees are allowed.",
+        request=PaymentsSerializer,
+        responses={
+            201: PaymentsSerializer,
+            403: OpenApiResponse(description="Forbidden"),
+        }
+    ),
+    partial_update=extend_schema(
+        summary="Partially update payment",
+        description="Allows partial update of payment. "
+                    "Members can only set their own payment's status to 'paid'. "
+                    "Admins and employees can modify all fields.",
+        request=PaymentUpdateSerializer,
+        responses={
+            200: PaymentsSerializer,
+            403: OpenApiResponse(description="Forbidden"),
+            404: OpenApiResponse(description="Not Found"),
+        }
+    ),
+    update=extend_schema(
+        summary="Fully update payment",
+        description="Allows full update of a payment. Only admins and employees are allowed.",
+        request=PaymentUpdateSerializer,
+        responses={
+            200: PaymentsSerializer,
+            403: OpenApiResponse(description="Forbidden"),
+            404: OpenApiResponse(description="Not Found"),
+        }
+    ),
+    destroy=extend_schema(
+        summary="Delete payment",
+        description="Delete a payment. Only admins and employees are allowed.",
+        responses={
+            204: OpenApiResponse(description="No Content"),
+            403: OpenApiResponse(description="Forbidden"),
+            404: OpenApiResponse(description="Not Found"),
+        }
+    ),
+)
 class PaymentViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
