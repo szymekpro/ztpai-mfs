@@ -2,7 +2,7 @@ import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'backend.settings'
 import django  # type: ignore
 django.setup()
-from ..models import Gym, Trainer, TrainerAvailability
+from ..models import Gym, Trainer
 from django.contrib.auth import get_user_model
 
 import io
@@ -73,15 +73,6 @@ def sample_trainer(sample_gym):
         gym=sample_gym,
         bio="sample bio",
         photo=mock_image,
-    )
-
-@pytest.fixture
-def sample_availability(sample_trainer):
-    return TrainerAvailability.objects.create(
-        trainer=sample_trainer,
-        weekday="Monday",
-        start_time="09:00",
-        end_time="12:00"
     )
 
 @pytest.mark.django_db

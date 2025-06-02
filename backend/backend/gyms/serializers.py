@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Gym, Trainer, TrainerAvailability, TrainerService
+from .models import Gym, Trainer, TrainerService
 
 
 class GymSerializer(serializers.ModelSerializer):
@@ -24,24 +24,7 @@ class GymSerializer(serializers.ModelSerializer):
             })
         return data
 
-class TrainerAvailabilitySerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = TrainerAvailability
-        fields = [
-            'trainer',
-            'weekday',
-            'start_time',
-            'end_time',
-        ]
-        read_only_fields = ['id']
-
-    def validate(self, data):
-        start = data.get('start_time')
-        end = data.get('end_time')
-        if start and end and start >= end:
-            raise serializers.ValidationError("Start time must be before end time.")
-        return data
 
 class TrainerServiceSerializer(serializers.ModelSerializer):
 
@@ -57,7 +40,6 @@ class TrainerServiceSerializer(serializers.ModelSerializer):
 
 class TrainerSerializer(serializers.ModelSerializer):
     full_name = serializers.ReadOnlyField()
-    availability = TrainerAvailabilitySerializer(many=True, read_only=True)
     available_services = serializers.PrimaryKeyRelatedField(many=True, queryset=TrainerService.objects.all())
 
     class Meta:
@@ -71,7 +53,6 @@ class TrainerSerializer(serializers.ModelSerializer):
             'description',
             'photo',
             'full_name',
-            'availability',
             'available_services',
         ]
         read_only_fields = [

@@ -37,23 +37,4 @@ class Trainer(models.Model):
         return f"{self.last_name} {self.first_name}"
 
 
-class TrainerAvailability(models.Model):
-    trainer = models.ForeignKey(Trainer, on_delete=models.CASCADE, related_name='availabilities')
-
-    WEEKDAYS = [
-        ('Monday', 'Monday'),
-        ('Tuesday', 'Tuesday'),
-        ('Wednesday', 'Wednesday'),
-        ('Thursday', 'Thursday'),
-        ('Friday', 'Friday'),
-        ('Saturday', 'Saturday'),
-        ('Sunday', 'Sunday'),
-    ]
-
-    weekday = models.CharField(max_length=10, choices=WEEKDAYS)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-
-    def __str__(self):
-        return f"{self.trainer} - {self.weekday} {self.start_time}-{self.end_time}"
 
