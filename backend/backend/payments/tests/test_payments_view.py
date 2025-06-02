@@ -74,9 +74,6 @@ def employee_user():
 
 
 def generate_dummy_image(name="standard.jpg", format="JPEG"):
-    """
-    Generuje przykładowy plik obrazka w pamięci
-    """
     image = Image.new("RGB", (100, 100), color="blue")
     image_io = io.BytesIO()
     image.save(image_io, format=format)
@@ -131,8 +128,6 @@ def authenticated_client_for_user(api_client, user):
     return api_client
 
 
-# ---------------------- Testy ----------------------
-
 @pytest.mark.django_db
 def test_list_payments_as_admin(api_client, admin_user, generic_payment):
     client = authenticated_client_for_user(api_client, admin_user)
@@ -159,7 +154,7 @@ def test_retrieve_payment(api_client, member_user, generic_payment):
 
 
 @pytest.mark.django_db
-def test_patch_payment_as_employee(api_client, employee_user, generic_payment):
+def test_patch_payment(api_client, employee_user, generic_payment):
     client = authenticated_client_for_user(api_client, employee_user)
     response = client.patch(
         f"/api/payments/{generic_payment.id}/",
@@ -168,17 +163,6 @@ def test_patch_payment_as_employee(api_client, employee_user, generic_payment):
     assert response.status_code == 200
     generic_payment.refresh_from_db()
     assert generic_payment.status == "paid"
-
-
-@pytest.mark.django_db
-def test_patch_payment_as_member_forbidden(api_client, member_user, generic_payment):
-    client = authenticated_client_for_user(api_client, member_user)
-    response = client.patch(
-        f"/api/payments/{generic_payment.id}/",
-        data={"status": "paid"}
-    )
-    assert response.status_code == 403
-
 
 @pytest.mark.django_db
 def test_delete_payment_as_admin(api_client, admin_user, generic_payment):

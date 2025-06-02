@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from rest_framework import serializers
 from .models import ScheduledTraining
 from gyms.serializers import TrainerServiceSerializer, TrainerSerializer
@@ -32,6 +34,29 @@ class ScheduledTrainingSerializer(serializers.ModelSerializer):
             'description'
         ]
         read_only_fields = ['id', 'user']
+
+    def validate(self, data):
+        start = data.get("start_time")
+        end = data.get("end_time")
+        trainer = data.get("trainer")
+
+        if start and end and end <= start:
+            raise serializers.ValidationError({
+                "end_time": "End time must be after start time."
+            })
+
+        if start and start < now():
+            raise serializers.ValidationError({
+                "start_time": "Start time must be in the future."
+            })
+
+        if start and start > now() + timedelta(days=60):
+            raise serializers.ValidationError({
+                "start_time": "You can only book up to 60 days in advance."
+            })
+
+
+        return data
 
     def to_representation(self, instance):
         if instance.status == 'scheduled' and instance.end_time < now():
