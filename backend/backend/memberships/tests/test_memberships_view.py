@@ -222,3 +222,31 @@ def test_has_active_membership_false(authenticated_client):
     response = authenticated_client.get("/api/user-memberships/active/")
     assert response.status_code == 200
     assert response.data == {"has_membership": False}
+
+@pytest.mark.django_db
+def test_get_membership_type_detail(authenticated_client, sample_membership_type):
+    response = authenticated_client.get(f"/api/membership-types/{sample_membership_type.id}/")
+    assert response.status_code == 200
+    assert response.data["name"] == sample_membership_type.name
+
+@pytest.mark.django_db
+def test_patch_membership_type(authenticated_client, sample_membership_type):
+    payload = {"price": "149.99"}
+    response = authenticated_client.patch(f"/api/membership-types/{sample_membership_type.id}/", data=payload)
+    assert response.status_code == 200
+    sample_membership_type.refresh_from_db()
+    assert float(sample_membership_type.price) == 149.99
+
+@pytest.mark.django_db
+def test_patch_user_membership(authenticated_client, sample_user_membership):
+    payload = {"is_active": False}
+    response = authenticated_client.patch(f"/api/user-memberships/{sample_user_membership.id}/", data=payload)
+    assert response.status_code == 200
+    sample_user_membership.refresh_from_db()
+    assert sample_user_membership.is_active is False
+
+@pytest.mark.django_db
+def test_get_user_membership_detail(authenticated_client, sample_user_membership):
+    response = authenticated_client.get(f"/api/user-memberships/{sample_user_membership.id}/")
+    assert response.status_code == 200
+    assert response.data["id"] == sample_user_membership.id
