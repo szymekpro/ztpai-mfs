@@ -4,11 +4,14 @@ import App from './App.tsx'
 
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import {SnackbarProvider} from "./components/navigation/SnackbarProvider.tsx";
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <App />
+            <SnackbarProvider>
+                <App />
+            </SnackbarProvider>
         </LocalizationProvider>
     </StrictMode>,
 )

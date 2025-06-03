@@ -12,7 +12,9 @@ import {
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../../api/axiosApi";
-import LogoPlaceholder from "../../../public/logo-zoom.png"; // zamień na swój obraz
+import LogoPlaceholder from "../../../public/logo-zoom.png";
+import { useSnackbar } from "../navigation/SnackbarProvider.tsx";
+
 
 interface RegisterFormData {
   email: string;
@@ -30,41 +32,51 @@ export default function RegisterForm() {
   const { control, handleSubmit } = useForm<RegisterFormData>();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [formErrors, setFormErrors] = useState<Partial<Record<keyof RegisterFormData, string>>>({});
+  const { showSnackbar } = useSnackbar();
+
 
   const onSubmit = async (data: RegisterFormData) => {
     setLoading(true);
     try {
       await api.post("/api/user/register/", data);
+      showSnackbar("Konto zostało utworzone pomyślnie!", "success");
       navigate("/login");
-    } catch (error) {
-      alert("Registration failed");
+    } catch (error: any) {
+      if (error.response?.data) {
+        const errors = Object.values(error.response.data).flat().join("\n");
+        showSnackbar(errors, "error");
+      } else {
+        showSnackbar("Błąd rejestracji", "error");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const renderInput = (
-    name: keyof RegisterFormData,
-    label: string,
-    type: string = "text"
+      name: keyof RegisterFormData,
+      label: string,
+      type: string = "text"
   ) => (
-    <Controller
-      name={name}
-      control={control}
-      defaultValue=""
-      rules={{ required: `${label} is required` }}
-      render={({ field, fieldState }) => (
-        <TextField
-          {...field}
-          label={label}
-          type={type}
-          fullWidth
-          error={!!fieldState.error}
-          helperText={fieldState.error?.message}
-        />
-      )}
-    />
+      <Controller
+          name={name}
+          control={control}
+          defaultValue=""
+          rules={{ required: `${label} is required` }}
+          render={({ field, fieldState }) => (
+              <TextField
+                  {...field}
+                  label={label}
+                  type={type}
+                  fullWidth
+                  error={!!fieldState.error || !!formErrors[name]}
+                  helperText={fieldState.error?.message || formErrors[name]}
+              />
+          )}
+      />
   );
+
 
   return (
     <Grid
