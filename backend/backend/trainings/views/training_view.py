@@ -63,3 +63,22 @@ class ScheduledTrainingViewSet(ModelViewSet):
             content_type=ContentType.objects.get_for_model(ScheduledTraining),
             object_id=training.id
         )
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        old_status = instance.status
+        response = super().partial_update(request, *args, **kwargs)
+
+        if request.data.get("status") == "cancelled" and old_status != "cancelled":
+            try:
+                payment = Payment.objects.get(
+                    content_type=ContentType.objects.get_for_model(ScheduledTraining),
+                    object_id=instance.id
+                )
+                if payment.status == "pending" or payment.status == "paid":
+                    payment.status = "refunded"
+                    payment.save()
+            except Payment.DoesNotExist:
+                pass
+
+        return response
