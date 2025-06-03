@@ -6,6 +6,11 @@ import {
     InputLabel,
     Select,
     MenuItem,
+      Dialog,
+      DialogTitle,
+      DialogContent,
+      DialogActions,
+      Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import api from "../../api/axiosApi.ts";
@@ -17,6 +22,9 @@ export default function TrainingHistory() {
     const [trainings, setTrainings] = useState<TrainingHistoryProps[]>([]);
     const currentMonth = dayjs().format("YYYY-MM");
     const [monthFilter, setMonthFilter] = useState<string>(currentMonth);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [trainingToCancel, setTrainingToCancel] = useState<number | null>(null);
+
 
     const startDate = dayjs("2025-03-01");
     const now = dayjs();
@@ -41,19 +49,29 @@ export default function TrainingHistory() {
         (t) => dayjs(t.start_time).format("YYYY-MM") === monthFilter
     );
 
-    const handleCancelTraining = (trainingId: number) => {
-        if (!window.confirm("Are you sure you want to cancel this training?")) return;
+    const askToCancelTraining = (trainingId: number) => {
+    setTrainingToCancel(trainingId);
+    setConfirmOpen(true);
+    };
 
-        api.patch(`/api/trainings/${trainingId}/`, { status: "cancelled" })
+    const confirmCancelTraining = () => {
+        if (!trainingToCancel) return;
+
+        api.patch(`/api/trainings/${trainingToCancel}/`, { status: "cancelled" })
             .then(() => {
                 setTrainings((prev) =>
                     prev.map((t) =>
-                        t.id === trainingId ? { ...t, status: "cancelled" } : t
+                        t.id === trainingToCancel ? { ...t, status: "cancelled" } : t
                     )
                 );
             })
-            .catch((err) => console.error("Failed to cancel training:", err));
+            .catch((err) => console.error("Failed to cancel training:", err))
+            .finally(() => {
+                setConfirmOpen(false);
+                setTrainingToCancel(null);
+            });
     };
+
 
     return (
         <Box
@@ -120,12 +138,24 @@ export default function TrainingHistory() {
                     <Grid container spacing={4}>
                         {filteredTrainings.map((training) => (
                             <Grid item xs={12} sm={6} md={4} key={training.id}>
-                                <TrainingCard training={training} onCancel={handleCancelTraining} />
+                                <TrainingCard training={training} onCancel={askToCancelTraining}/>
                             </Grid>
                         ))}
                     </Grid>
                 </Box>
             )}
+            <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+                <DialogTitle>Cancel Training?</DialogTitle>
+                <DialogContent>
+                    <Typography>Are you sure you want to cancel this training session?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmOpen(false)}>No</Button>
+                    <Button onClick={confirmCancelTraining} variant="contained" color="error">
+                        Yes, cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }

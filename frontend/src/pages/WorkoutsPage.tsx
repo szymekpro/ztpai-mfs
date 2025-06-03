@@ -14,7 +14,6 @@ export default function WorkoutsPage() {
             .catch(() => setHasActiveMembership(false));
     }, []);
 
-    console.log(hasActiveMembership);
 
     return (
         <Box

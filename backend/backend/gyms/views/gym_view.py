@@ -157,8 +157,8 @@ class TrainerViewSet(ModelViewSet):
 
         trainings = ScheduledTraining.objects.filter(
             trainer_id=pk,
-            start_time__date=date
-        )
+            start_time__date=date,
+        ).exclude(status='cancelled')
 
         booked_hours = [localtime(t.start_time).strftime('%H:%M') for t in trainings]
         return Response({"booked_hours": booked_hours})

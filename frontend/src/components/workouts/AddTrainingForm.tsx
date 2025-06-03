@@ -9,7 +9,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import TrainingFormCard from "./TrainingFormCard.tsx";
 import {Gym, Trainer, FormValues, TrainerServices} from "./GymProps.ts"
 import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "../../hooks/useSnackbar";
+import { useSnackbar } from "../navigation/SnackbarProvider.tsx";
 
 export default function AddTrainingForm() {
     const [trainers, setTrainers] = useState<Trainer[]>([]);
