@@ -1,3 +1,5 @@
+import {User} from "../user/UserProps.ts";
+
 export interface Gym{
     id: number;
     name: string;
@@ -32,8 +34,9 @@ export interface TrainerServices {
 
 export interface TrainingHistoryProps {
     id: number;
-    service_type: TrainerServices
-    trainer: Trainer
+    user: User;
+    service_type: TrainerServices;
+    trainer: Trainer;
     start_time: string;
     end_time: string;
     status: string;

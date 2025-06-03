@@ -13,6 +13,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import EventIcon from "@mui/icons-material/Event";
 import dayjs from "dayjs";
 import { TrainingHistoryProps } from "./GymProps.ts";
+import {useUserRole} from "../../hooks/useUserRole.ts";
 
 export default function TrainingCard({
   training,
@@ -60,6 +61,8 @@ export default function TrainingCard({
     training.status === "scheduled" &&
     dayjs(training.start_time).isAfter(dayjs());
 
+  const {role} = useUserRole()
+
   return (
     <Card
       sx={{
@@ -68,7 +71,7 @@ export default function TrainingCard({
         boxShadow: 2,
         padding: 2,
         paddingTop: 1,
-        height: "180px",
+        height: role === "member" ? "180px" : "200px",
         width: "308px",
         minWidth: "280px",
         flexShrink: 10,
@@ -96,6 +99,12 @@ export default function TrainingCard({
           <strong>Description:</strong>{" "}
           {training.description || "No description"}
         </Typography>
+        {role !== "member" && training.user && (
+          <Typography variant="body2" gutterBottom>
+            <strong>User:</strong>{" "}
+            {training.user.first_name} {training.user.last_name} ({training.user.email})
+          </Typography>
+        )}
       </CardContent>
 
       <Box sx={{ position: "absolute", bottom: 18, left: 16 }}>

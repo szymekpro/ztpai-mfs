@@ -49,6 +49,9 @@ class ScheduledTrainingViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        user = self.request.user
+        if user.role == "employee" or user.role == "admin":
+            return ScheduledTraining.objects.all()
         return ScheduledTraining.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):

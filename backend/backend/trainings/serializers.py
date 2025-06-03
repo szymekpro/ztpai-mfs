@@ -5,6 +5,7 @@ from .models import ScheduledTraining
 from gyms.serializers import TrainerServiceSerializer, TrainerSerializer
 from gyms.models import TrainerService, Trainer
 from django.utils.timezone import now
+from users.serializers import UsersSerializer
 
 
 class ScheduledTrainingSerializer(serializers.ModelSerializer):
@@ -17,6 +18,7 @@ class ScheduledTrainingSerializer(serializers.ModelSerializer):
     trainer_id = serializers.PrimaryKeyRelatedField(
         queryset=Trainer.objects.all(), source='trainer', write_only=True
     )
+    user = UsersSerializer(read_only=True)
 
     class Meta:
         model = ScheduledTraining
