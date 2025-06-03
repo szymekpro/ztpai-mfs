@@ -2,6 +2,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from django.contrib.contenttypes.models import ContentType
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -161,6 +162,35 @@ class UserMembershipViewSet(ModelViewSet):
             content_type=content_type,
             object_id=user_membership.id,
         )
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        user = request.user
+
+        if user.role not in ["admin", "employee"]:
+            return Response(
+                {"detail": "You are not authorized to perform this action."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        is_active = request.data.get("is_active")
+        if is_active is not None:
+            is_active = str(is_active).lower() == "true"
+
+            instance.is_active = is_active
+            if is_active:
+                instance.start_date = timezone.now().date()
+                instance.end_date = instance.start_date + timedelta(days=30)
+            instance.save()
+
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(
+            {"detail": "No supported fields provided."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
 
     @extend_schema(
         summary="Check if user has active membership",

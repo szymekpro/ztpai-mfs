@@ -1,5 +1,8 @@
+import {User} from "../user/UserProps.ts"
+
 export interface UserMembership {
     id: number;
+    user: User;
     start_date: string;
     end_date: string;
     is_active: boolean;
@@ -13,7 +16,7 @@ export interface UserMembership {
     };
 }
 
-interface MembershipTypeProps {
+export interface MembershipTypeProps {
   id: number;
   name: string;
   description: string;

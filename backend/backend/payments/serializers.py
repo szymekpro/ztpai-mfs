@@ -12,6 +12,7 @@ class PaymentsSerializer(serializers.ModelSerializer):
             'user',
             'amount',
             'status',
+            'created_at',
             'description',
             'content_type',
             'object_id',

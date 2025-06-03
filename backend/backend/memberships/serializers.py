@@ -5,6 +5,9 @@ from rest_framework import serializers
 from .models import MembershipType, UserMembership
 from django.utils.timezone import now
 
+from users.serializers import UsersSerializer
+
+
 class MembershipTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = MembershipType
@@ -23,6 +26,7 @@ class MembershipTypeSerializer(serializers.ModelSerializer):
 
 
 class UserMembershipSerializer(serializers.ModelSerializer):
+    user = UsersSerializer(read_only=True)
     membership_type = MembershipTypeSerializer(read_only=True)
     membership_type_id = serializers.PrimaryKeyRelatedField(
         source='membership_type',

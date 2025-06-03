@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Gym } from "./GymProps.ts";
 import { useState } from "react";
 import GymDialog from "./EditGymDialog.tsx";
+import {useUserRole} from "../../hooks/useUserRole.ts";
 
 interface Props {
     gyms: Gym[];
@@ -12,6 +13,7 @@ interface Props {
 export default function GymListCard({ gyms, setGyms }: Props) {
     const navigate = useNavigate();
     const [dialogOpen, setDialogOpen] = useState(false);
+    const {role} = useUserRole()
 
     const groupedGyms = gyms.reduce<Record<string, Gym[]>>((acc, gym) => {
         if (!acc[gym.city]) acc[gym.city] = [];
@@ -98,15 +100,16 @@ export default function GymListCard({ gyms, setGyms }: Props) {
                 </Box>
             ))}
 
-            <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => setDialogOpen(true)}
-                sx={{ mt: 1, width: 150, height: 50 }}
-            >
-                Add New Gym
-            </Button>
-
+            {role !== "member" && (
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => setDialogOpen(true)}
+                    sx={{ mt: 1, width: 150, height: 50 }}
+                >
+                    Add New Gym
+                </Button>
+            )}
             <GymDialog
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}

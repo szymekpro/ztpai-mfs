@@ -4,20 +4,18 @@ import TrainerCard from "./TrainerCard";
 import TrainerDialog from "./EditTrainerDialog.tsx";
 import api from "../../api/axiosApi";
 import { Trainer } from "./TrainersProps";
+import {useUserRole} from "../../hooks/useUserRole.ts";
 
 export default function TrainerList() {
     const [trainers, setTrainers] = useState<Trainer[]>([]);
     const [addDialogOpen, setAddDialogOpen] = useState(false);
+    const {role} = useUserRole()
 
     useEffect(() => {
-        fetchTrainers();
-    }, []);
-
-    const fetchTrainers = () => {
         api.get('/api/trainers/')
             .then(res => setTrainers(res.data))
             .catch(err => console.error(err));
-    };
+    }, []);
 
     const handleAddTrainer = (newTrainer: Trainer) => {
         setTrainers(prev => [...prev, newTrainer]);
@@ -48,11 +46,13 @@ export default function TrainerList() {
                 ))}
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="outlined"  sx={{width:150, height:50}} onClick={() => setAddDialogOpen(true)}>
-                    Add Trainer
-                </Button>
-            </Box>
+            {role !== "member" && (
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button variant="outlined"  sx={{width:150, height:50}} onClick={() => setAddDialogOpen(true)}>
+                        Add Trainer
+                    </Button>
+                </Box>
+            )}
 
             <TrainerDialog
                 open={addDialogOpen}
