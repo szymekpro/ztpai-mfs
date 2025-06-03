@@ -13,6 +13,9 @@ import { useEffect, useState } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import api from "../../api/axiosApi.ts";
 import dayjs from "dayjs";
+import { useSnackbar } from "../navigation/SnackbarProvider.tsx";
+import { User } from "../user/UserProps.ts";
+
 
 interface MembershipType {
   id: number;
@@ -25,37 +28,62 @@ interface MembershipType {
 export default function MembershipBuyDescription() {
   const { id } = useParams();
   const [membership, setMembership] = useState<MembershipType | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!id) return;
-    api
-      .get(`/api/membership-types/${id}/`)
-      .then((res) => setMembership(res.data))
-      .catch((err) => console.error("Failed to fetch membership type:", err));
-  }, [id]);
+  const { showSnackbar } = useSnackbar();
 
-  const handleBuy = () => {
 
-  if (!membership) return;
+    useEffect(() => {
+      if (!id) return;
 
-  const start = dayjs().format("YYYY-MM-DD");
-  const end = dayjs().add(membership.duration_days, "day").format("YYYY-MM-DD");
+      const fetchData = async () => {
+        try {
+          const [membershipRes, userRes] = await Promise.all([
+            api.get(`/api/membership-types/${id}/`),
+            api.get("/api/users/me/"),
+          ]);
+          setMembership(membershipRes.data);
+          setUser(userRes.data);
+        } catch (err) {
+          console.error("Failed to fetch data:", err);
+        }
+      };
 
-  api.post("/api/user-memberships/", {
-    membership_type_id: membership.id,
-    start_date: start,
-    end_date: end,
-    is_active: true
-  })
-    .then(() => {
-      alert("Membership purchased. Pending payment created.");
-      navigate("/memberships");
-    })
-    .catch((err) => console.error("Failed to purchase membership:", err));
-};
+      fetchData();
+}, [id]);
 
-  const renderFeatures = (featuresText: string) => {
+    const handleBuy = async () => {
+        if (!membership) return;
+
+        const start = dayjs().format("YYYY-MM-DD");
+        const end = dayjs().add(membership.duration_days, "day").format("YYYY-MM-DD");
+
+        try {
+            await api.post("/api/user-memberships/", {
+                membership_type_id: membership.id,
+                start_date: start,
+                end_date: end,
+                is_active: true,
+            });
+            showSnackbar("Membership purchased. Pending payment created.", "success");
+            navigate("/memberships");
+        } catch (error: any) {
+            console.error("Error response:", error.response?.data);
+
+            const fallback = "Purchase failed.";
+            const msg =
+                error.response?.data?.non_field_errors?.[0] ||
+                error.response?.data?.detail ||
+                (typeof error.response?.data === "string" ? error.response.data : null) ||
+                fallback;
+
+            showSnackbar(msg, "error");
+        }
+
+    };
+
+    const renderFeatures = (featuresText: string) => {
     return featuresText
       .split("\n")
       .filter((line) => line.trim().startsWith("-"))
@@ -84,7 +112,7 @@ export default function MembershipBuyDescription() {
   }
 
   return (
-    <Box sx={{ maxWidth: 700, mt: 2, alignSelf: "center" }}>
+    <Box sx={{ maxWidth: 700, mt: 2, alignSelf: "center", justifyContent: "center" }}>
       <Divider sx={{ my: 2 }} />
       <Typography variant="h6" fontWeight="medium" gutterBottom>
         Included Features:
@@ -93,12 +121,30 @@ export default function MembershipBuyDescription() {
         <Divider sx={{ my: 2 }} />
          <Button
           variant="contained"
+          disabled={!user?.is_student}
           fullWidth
           sx={{ mb: 3, backgroundColor: "#1d7ecd" }}
           onClick={handleBuy}
         >
           Buy Now
         </Button>
+        {membership.name === 'Student' &&
+            <Button
+                variant="outlined"
+                disabled={user?.is_student}
+                onClick={async () => {
+                    try {
+                        await api.post("/api/users/request_student_status/");
+                        showSnackbar("Request sent. Await verification.", "success");
+                    } catch (e) {
+                        showSnackbar("Failed to send request.", "error");
+                    }
+                }}
+                sx={{width:'100%', marginBottom: 2}}
+            >
+                Request student verification
+            </Button>
+        }
     </Box>
   );
 }

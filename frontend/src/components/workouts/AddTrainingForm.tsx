@@ -9,6 +9,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import TrainingFormCard from "./TrainingFormCard.tsx";
 import {Gym, Trainer, FormValues, TrainerServices} from "./GymProps.ts"
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "../../hooks/useSnackbar";
 
 export default function AddTrainingForm() {
     const [trainers, setTrainers] = useState<Trainer[]>([]);
@@ -18,6 +19,8 @@ export default function AddTrainingForm() {
     const [selectedHour, setSelectedHour] = useState<string | null>(null);
     const [availableServices, setAvailableServices] = useState<TrainerServices[]>([]);
     const navigate = useNavigate();
+    const { showSnackbar } = useSnackbar();
+
 
     const [formData, setFormData] = useState<FormValues>({
         trainer: '',
@@ -77,15 +80,15 @@ export default function AddTrainingForm() {
         e.preventDefault();
 
         if (!selectedDate || !selectedHour || !formData.service_type) {
-            alert("Please select trainer, service and date with hour.");
+            showSnackbar("Please select trainer, service and date with hour.", "warning");
             return;
-        }
+         }
 
         const combinedStart = dayjs(`${selectedDate.format("YYYY-MM-DD")}T${selectedHour}`);
         const combinedEnd = combinedStart.add(1, 'hour');
 
         if (!gym) {
-            alert("Please select an active gym.");
+            showSnackbar("Please select an active gym.", "warning");
             return;
         }
         formData.gym = gym.id.toString();
@@ -98,7 +101,7 @@ export default function AddTrainingForm() {
             end_time: combinedEnd.toISOString()
         })
             .then(() => {
-                alert("Training added!");
+                showSnackbar("Training scheduled successfully!", "success");
                 setFormData({
                     trainer: '',
                     gym: '',
@@ -110,7 +113,10 @@ export default function AddTrainingForm() {
                 setSelectedHour(null);
                 navigate('/workouts');
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error(err);
+                showSnackbar("Failed to schedule training.", "error");
+            });
     };
 
     return (

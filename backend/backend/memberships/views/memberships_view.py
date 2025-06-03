@@ -2,6 +2,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from django.contrib.contenttypes.models import ContentType
+from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -113,6 +114,15 @@ class UserMembershipViewSet(ModelViewSet):
         user = self.request.user
         membership_type = serializer.validated_data['membership_type']
 
+        has_active = UserMembership.objects.filter(
+            user=user,
+            membership_type=membership_type,
+            is_active=True
+        ).exists()
+
+        if has_active:
+            raise ValidationError({"non_field_errors": ["You already have an active membership of this type."]})
+
         existing = UserMembership.objects.filter(
             user=user,
             membership_type=membership_type,
@@ -120,7 +130,7 @@ class UserMembershipViewSet(ModelViewSet):
         ).first()
 
         start_date = timezone.now().date()
-        end_date = start_date + timedelta(days=30)
+        end_date = start_date + timedelta(days=membership_type.duration_days)
 
         if existing:
             existing.start_date = start_date

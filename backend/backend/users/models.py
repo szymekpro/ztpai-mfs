@@ -29,6 +29,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     street_number = models.CharField(max_length=20, blank=True, null=True)
     city = models.CharField(max_length=20, blank=True, null=True)
     postal_code = models.CharField(max_length=20, blank=True, null=True)
+    is_student = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

@@ -22,6 +22,7 @@ class UsersSerializer(ModelSerializer):
             "city",
             "postal_code",
             "role",
+            "is_student",
         ]
         read_only_fields = ["id", "email"]
 

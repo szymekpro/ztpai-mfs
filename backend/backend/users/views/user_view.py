@@ -111,3 +111,14 @@ class UserViewSet(ModelViewSet):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @extend_schema(
+        summary="Verify user student status",
+        description="Sets student status to true upon request.",
+    )
+    @action(detail=False, methods=["post"], permission_classes=[IsAuthenticated])
+    def request_student_status(self, request):
+        user = request.user
+        user.is_student = True  # W prawdziwym scenariuszu tu byłaby prośba, nie automatyczne zatwierdzenie
+        user.save()
+        return Response({"detail": "Student status requested"}, status=status.HTTP_200_OK)
+
