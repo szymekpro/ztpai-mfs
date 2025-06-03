@@ -9,5 +9,5 @@ export interface User {
     city: string;
     postal_code: string;
     role: string;
-    is_student: string;
+    is_student: boolean;
 }

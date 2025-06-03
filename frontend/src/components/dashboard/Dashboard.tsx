@@ -52,6 +52,7 @@ export default function Dashboard() {
 
         <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', width: '65%', gap: 4 }}>
             <Box sx={{
+                minWidth: 300,
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
@@ -81,6 +82,7 @@ export default function Dashboard() {
                 }}
             >
                 <Card onClick={() => navigate(`/memberships/`)} sx={{
+                    minWidth: 300,
                     width: { xs: '100%', md: '50%' },
                     minHeight: 220,
                     bgcolor: '#f8fafc',
@@ -144,6 +146,7 @@ export default function Dashboard() {
 
                 <Card onClick={() => navigate(`/payments/`)}
                     sx={{
+                    minWidth: 300,
                     width: { xs: '100%', md: '50%' },
                     minHeight: 220,
                     bgcolor: '#f8fafc',
@@ -161,7 +164,7 @@ export default function Dashboard() {
                         <Divider sx={{ my: 1 }} />
 
                         {payments.filter(p => p.status === "pending").length > 0 && (
-                            <Typography color="warning.main" sx={{ mb: 2 }}>
+                            <Typography  sx={{ mb: 2 }}>
                                 You have <strong>{payments.filter(p => p.status === "pending").length}</strong> pending payment(s)!
                             </Typography>
                         )}

@@ -180,6 +180,12 @@ export default function PaymentsList() {
             {dayjs(payment.created_at).format("YYYY-MM-DD HH:mm")}
           </Typography>
 
+          {role !== "member" && payment.user && (
+              <Typography variant="body2" color="text.secondary">
+                User: {payment.user.first_name} {payment.user.last_name} ({payment.user.email})
+              </Typography>
+          )}
+
           <Box sx={ {display: 'flex', flexDirection: "row", alignItems: "center", marginTop: 1}}>
             <Chip
               label={payment.status.toUpperCase()}
@@ -193,6 +199,7 @@ export default function PaymentsList() {
                   size="small"
                   variant="contained"
                   color="info"
+                  disabled={role !== "member"}
                   onClick={() => handleMockPay(payment.id)}
                   sx={{
                     borderRadius: "15px",

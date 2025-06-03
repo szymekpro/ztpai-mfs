@@ -60,3 +60,19 @@ class TrainerSerializer(serializers.ModelSerializer):
             'full_name',
         ]
 
+    def create(self, validated_data):
+        validated_data.pop('id', None)
+        services = validated_data.pop('available_services', [])
+        trainer = Trainer.objects.create(**validated_data)
+        trainer.available_services.set(services)
+        return trainer
+
+    def update(self, instance, validated_data):
+        services = validated_data.pop('available_services', None)
+        instance = super().update(instance, validated_data)
+
+        if services is not None:
+            instance.available_services.set(services)
+
+        return instance
+

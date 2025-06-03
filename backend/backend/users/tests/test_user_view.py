@@ -28,7 +28,8 @@ def member_user():
     return User.objects.create_user(
         email="member@gym.pl",
         password="member123",
-        role="member"
+        role="member",
+        is_student=False,
     )
 
 
@@ -150,3 +151,14 @@ def test_delete_user_as_member_forbidden(api_client, member_user, admin_user):
     client = authenticated_client_for_user(api_client, member_user)
     response = client.delete(f"/api/users/{admin_user.id}/")
     assert response.status_code in (403, 404)
+
+@pytest.mark.django_db
+def test_request_student_status(api_client, member_user):
+    client = authenticated_client_for_user(api_client, member_user)
+    response = client.post("/api/users/request_student_status/")
+
+    assert response.status_code == 200
+    assert response.data["detail"] == "Student status requested"
+
+    member_user.refresh_from_db()
+    assert member_user.is_student is True

@@ -26,7 +26,7 @@ export default function GymsPage() {
     return (
         <Box sx={{ padding: 4 }}>
             <Typography variant="h5" sx={{ mb: 2 }}>Available Gyms:</Typography>
-            <GymsListCard gyms={gyms} />
+            <GymsListCard gyms={gyms} setGyms={setGyms}/>
         </Box>
     );
 }

@@ -7,7 +7,7 @@ import { TrainerServices } from "../workouts/GymProps.ts";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TrainerGym from "./TrainerGym";
-import EditTrainerDialog from "./EditTrainerDialog";
+import TrainerDialog from "./EditTrainerDialog";
 import {useUserRole} from "../../hooks/useUserRole.ts";
 
 
@@ -179,9 +179,10 @@ console.log(isMember)
                 </Box>
 
             }
-            <EditTrainerDialog
+            <TrainerDialog
                 open={editDialogOpen}
                 onClose={() => setEditDialogOpen(false)}
+                mode="edit"
                 trainer={trainer}
                 onUpdate={(updated) => {
                     setTrainer(updated);
@@ -191,7 +192,8 @@ console.log(isMember)
                     setEditDialogOpen(false);
                 }}
             />
-</Box>
+
+        </Box>
 
 
 );

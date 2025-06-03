@@ -118,7 +118,7 @@ class UserViewSet(ModelViewSet):
     @action(detail=False, methods=["post"], permission_classes=[IsAuthenticated])
     def request_student_status(self, request):
         user = request.user
-        user.is_student = True  # W prawdziwym scenariuszu tu byłaby prośba, nie automatyczne zatwierdzenie
+        user.is_student = True
         user.save()
         return Response({"detail": "Student status requested"}, status=status.HTTP_200_OK)
 

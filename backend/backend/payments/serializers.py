@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from .models import Payment
+from users.serializers import UsersSerializer
+
 
 class PaymentsSerializer(serializers.ModelSerializer):
+    user = UsersSerializer(read_only=True)
     class Meta:
         model = Payment
         fields = [
