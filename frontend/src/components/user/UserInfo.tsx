@@ -3,6 +3,7 @@ import { Box, Card, CardContent, Typography, Divider, Avatar, Chip, CircularProg
 import api from "../../api/axiosApi.ts";
 import {User} from "./UserProps.ts";
 import UserEditDialog from "./UserEditDialog.tsx";
+import UserRoleDialog from "./UserRoleDialog.tsx";
 import { useNavigate } from "react-router-dom";
 
 
@@ -10,6 +11,7 @@ export default function UserInfo() {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [editOpen, setEditOpen] = useState(false);
+    const [openManageRoles, setOpenManageRoles] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -35,7 +37,7 @@ export default function UserInfo() {
         );
     }
 
-    const isAdmin = user.role === "admin";
+    const isMember = user.role === "member";
 
     return (
         <Box
@@ -114,15 +116,27 @@ export default function UserInfo() {
                 </CardContent>
             </Card>
 
-            {isAdmin && (
-                <Button
-                    variant="outlined"
-                    onClick={() => setEditOpen(true)}
-                    sx={{width: 200, height: 50}}
-                >
-                    Edit / Delete
-                </Button>
+            {!isMember && (
+                <><Box>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setEditOpen(true)}
+                        sx={{width: 200, height: 50}}
+                    >
+                        Edit / Delete
+                    </Button>
+                </Box>
+                    <Box>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setOpenManageRoles(true)}
+                        sx={{width: 200, height: 50}}
+                        >
+                        Manage Roles
+                    </Button>
+                </Box></>
             )}
+            <UserRoleDialog open={openManageRoles} onClose={() => setOpenManageRoles(false)} />
             <UserEditDialog
                 open={editOpen}
                 onClose={() => setEditOpen(false)}

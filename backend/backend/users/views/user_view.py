@@ -100,3 +100,14 @@ class UserViewSet(ModelViewSet):
     def me(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        user = self.get_object()
+
+        user = self.get_object()
+        user.scheduled_trainings.update(status='cancelled')
+        user.memberships.all().delete()
+
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

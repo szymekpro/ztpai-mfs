@@ -23,7 +23,13 @@ class UsersSerializer(ModelSerializer):
             "postal_code",
             "role",
         ]
-        read_only_fields = ["role"]
+        read_only_fields = ["id", "email"]
+
+    def validate_role(self, value):
+        user = self.context["request"].user
+        if user.role not in ("admin", "employee"):
+            raise serializers.ValidationError("You are not allowed to change role.")
+        return value
 
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():

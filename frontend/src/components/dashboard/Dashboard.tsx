@@ -204,7 +204,7 @@ export default function Dashboard() {
                 </Card>
             </Box>
 
-            <Card onClick={() => navigate(`/workouts/`)}
+            <Card
                 sx={{
                 width: '100%',
                 minHeight: 180,
@@ -220,6 +220,15 @@ export default function Dashboard() {
             }}>
                 <CardContent>
                     <TrainingTimeline trainings={trainings} />
+                    <Box display="flex" justifyContent="flex-end" mt={2}>
+                        <Typography
+                            variant="body2"
+                            sx={{ cursor: 'pointer', color: 'primary.main', fontWeight: 'bold' }}
+                            onClick={() => navigate("/workouts/")}
+                        >
+                            View full schedule →
+                        </Typography>
+                    </Box>
                 </CardContent>
             </Card>
         </Box>
