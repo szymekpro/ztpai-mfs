@@ -12,7 +12,6 @@ export default function MembershipCard() {
     useEffect(() => {
         api.get('/api/user-memberships/')
             .then(res => {
-                console.log('API response:', res);
                 setMemberships(res.data);
             })
             .catch(err => console.error(err));

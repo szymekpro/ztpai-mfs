@@ -10,7 +10,6 @@ from django.utils.timezone import now, timedelta
 from django.test.utils import override_settings
 from rest_framework.test import APIClient
 from django.contrib.auth import get_user_model
-
 from gyms.models import Gym, Trainer, TrainerService
 from trainings.models import ScheduledTraining
 from payments.models import Payment
@@ -34,6 +33,15 @@ def member_user():
     return User.objects.create_user(
         email='member@gym.pl',
         password='member123',
+        role='member'
+    )
+
+@pytest.fixture
+def member_user_2():
+    User = get_user_model()
+    return User.objects.create_user(
+        email='member2@gym.pl',
+        password='member1234',
         role='member'
     )
 
@@ -94,7 +102,7 @@ def test_list_trainings_as_member(api_client, member_user, test_training):
     client = authenticated_client_for_user(api_client, member_user)
     response = client.get("/api/trainings/")
     assert response.status_code == 200
-    assert all(item["user"] == member_user.id for item in response.data)
+    assert all(item["user"]["id"] == member_user.id for item in response.data)
 
 
 @pytest.mark.django_db
@@ -131,8 +139,8 @@ def test_retrieve_training(api_client, member_user, test_training):
 
 
 @pytest.mark.django_db
-def test_forbid_access_to_others_training(api_client, admin_user, test_training):
-    client = authenticated_client_for_user(api_client, admin_user)
+def test_forbid_access_to_others_training(api_client, member_user_2, test_training):
+    client = authenticated_client_for_user(api_client, member_user_2)
     response = client.get(f"/api/trainings/{test_training.id}/")
     assert response.status_code in (403, 404)
 

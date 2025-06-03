@@ -30,7 +30,7 @@ def test_user():
     user = User.objects.create_user(
         email='testuser@gmail.com',
         password='123',
-        role='member',
+        role='employee',
     )
     return user
 
@@ -133,10 +133,6 @@ def test_delete_membership_type(authenticated_client, sample_membership_type):
 def test_delete_membership_type_not_found(authenticated_client):
     response = authenticated_client.delete("/api/membership-types/9999/")
     assert response.status_code == 404
-
-# -----------------------------
-# UserMembershipViewSet TESTS
-# -----------------------------
 
 @pytest.mark.django_db
 def test_get_user_memberships(authenticated_client, sample_user_membership):

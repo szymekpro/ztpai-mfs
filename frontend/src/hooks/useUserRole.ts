@@ -25,7 +25,6 @@ export function useUserRole(): {
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
       const role = (payload.role || "member") as UserRole;
-      console.log(payload);
 
       return {
         role,

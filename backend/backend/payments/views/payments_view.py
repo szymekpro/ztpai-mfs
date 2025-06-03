@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from ..models import Payment
 from rest_framework.permissions import IsAuthenticated
-from ..serializers import PaymentsSerializer, PaymentUpdateSerializer
+from ..serializers import PaymentsSerializer, PaymentUpdateSerializer, PaymentCreateSerializer
 from drf_spectacular.utils import (
     extend_schema, extend_schema_view, OpenApiResponse
 )
@@ -80,6 +80,8 @@ class PaymentViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "partial_update":
             return PaymentUpdateSerializer
+        if self.action == "create":
+            return PaymentCreateSerializer
         return PaymentsSerializer
 
     def partial_update(self, request, *args, **kwargs):

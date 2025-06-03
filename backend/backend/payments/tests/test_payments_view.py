@@ -141,7 +141,7 @@ def test_list_payments_as_member(api_client, member_user, generic_payment):
     client = authenticated_client_for_user(api_client, member_user)
     response = client.get("/api/payments/")
     assert response.status_code == 200
-    assert all(item["user"] == member_user.id for item in response.data)
+    assert all(item["user"]["id"] == member_user.id for item in response.data)
     assert any(item["id"] == generic_payment.id for item in response.data)
 
 
