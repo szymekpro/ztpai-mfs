@@ -43,7 +43,6 @@ export default function TrainerDetails() {
 
     const selectedStr = selectedDate?.format("YYYY-MM-DD") || "";
     const bookedHours = bookedMap[selectedStr] || [];
-console.log(isMember)
 
     return (
         <Box sx={{

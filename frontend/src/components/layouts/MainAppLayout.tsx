@@ -13,6 +13,7 @@ import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import api from "../../api/axiosApi.ts";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {useUserRole} from "../../hooks/useUserRole.ts";
 
 
 interface Gym {
@@ -28,6 +29,7 @@ export default function MainAppLayout() {
     const [selectedGym, setSelectedGym] = useState<Gym | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [gyms, setGyms] = useState<Gym[]>([]);
+    const {role} = useUserRole();
 
     useEffect(() => {
         api.get('api/gyms/')
@@ -114,24 +116,26 @@ export default function MainAppLayout() {
                                 objectFit: 'contain'
                             }}
                         />
-                        <Button
-                            variant="contained"
-                            onClick={() => setDialogOpen(true)}
-                            sx={{
-                                height: 48,
-                                minWidth: 128,
-                                maxWidth: 164,
-                                backgroundColor: '#619fd2',
-                                color: '#fff',
-                                margin: 2,
-                                fontSize: 16,
-                                '&:hover': {
-                                    backgroundColor: '#0b4883',
-                                },
-                            }}
-                        >
-                            {selectedGym ? `${selectedGym.name}` : 'Select a gym'}
-                        </Button>
+                        {role === "member" &&
+                            <Button
+                                variant="contained"
+                                onClick={() => setDialogOpen(true)}
+                                sx={{
+                                    height: 48,
+                                    minWidth: 128,
+                                    maxWidth: 164,
+                                    backgroundColor: '#619fd2',
+                                    color: '#fff',
+                                    margin: 2,
+                                    fontSize: 16,
+                                    '&:hover': {
+                                        backgroundColor: '#0b4883',
+                                    },
+                                }}
+                            >
+                                {selectedGym ? `${selectedGym.name}` : 'Select a gym'}
+                            </Button>
+                        }
                     </Box>
 
                     <Box>

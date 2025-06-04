@@ -121,7 +121,7 @@ export default function MembershipBuyDescription() {
         <Divider sx={{ my: 2 }} />
          <Button
           variant="contained"
-          disabled={!user?.is_student}
+          disabled={!user?.is_student && membership.name === 'Student'}
           fullWidth
           sx={{ mb: 3, backgroundColor: "#1d7ecd" }}
           onClick={handleBuy}

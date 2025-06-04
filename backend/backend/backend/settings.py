@@ -24,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(env_file=os.path.join(BASE_DIR, '.env'))
 
 BREVO_API_KEY = env('BREVO_API_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
-SECRET_KEY = 'django-insecure-db6cd3r*m8^x*=k!)&o=80u0d-1-ow1^dxx3n+%%g3r9vt5hz2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
