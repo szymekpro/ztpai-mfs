@@ -20,6 +20,8 @@ import api from "../api/axiosApi";
 import EditPaymentDialog from "./EditPaymentDialog.tsx";
 import { useUserRole } from "../hooks/useUserRole.ts";
 import { Payment } from "./PaymentProps.ts";
+import { Autocomplete, TextField } from "@mui/material";
+
 
 export default function PaymentsList() {
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -29,7 +31,7 @@ export default function PaymentsList() {
   const currentMonth = dayjs().format("YYYY-MM");
   const [monthFilter, setMonthFilter] = useState<string>(currentMonth);
   const [showOnlyPending, setShowOnlyPending] = useState(false);
-  const [userFilter, setUserFilter] = useState<number | "">("");
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [users, setUsers] = useState<any[]>([]);
 
   const startDate = dayjs("2025-03-01");
@@ -113,7 +115,7 @@ export default function PaymentsList() {
   const filteredPayments = payments.filter((payment) => {
     const isSameMonth = dayjs(payment.created_at).format("YYYY-MM") === monthFilter;
     const isPending = showOnlyPending ? payment.status === "pending" : true;
-    const isUserMatch = userFilter ? payment.user?.id === userFilter : true;
+    const isUserMatch = selectedUser ? payment.user?.id === selectedUser.id : true;
     return isSameMonth && isPending && isUserMatch;
   });
 
@@ -140,21 +142,20 @@ export default function PaymentsList() {
           </FormControl>
 
           {role !== "member" && (
-              <FormControl sx={{ minWidth: 200 }} size="small">
-                <InputLabel>User</InputLabel>
-                <Select
-                    value={userFilter}
-                    onChange={(e) => setUserFilter(e.target.value as number)}
-                    label="User"
-                >
-                  <MenuItem value="">All</MenuItem>
-                  {users.map((u) => (
-                      <MenuItem key={u.id} value={u.id}>
-                        {u.first_name} {u.last_name}
-                      </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                  options={users}
+                  value={selectedUser}
+                  onChange={(_, value) => setSelectedUser(value)}
+                  getOptionLabel={(user) =>
+                      user ? `${user.first_name} ${user.last_name}` : ""
+                  }
+                  renderInput={(params) => (
+                      <TextField {...params} label="Filter by user" size="small" />
+                  )}
+                  isOptionEqualToValue={(option, value) => option.id === value.id}
+                  sx={{ minWidth: 200 }}
+              />
+
           )}
 
           <Button

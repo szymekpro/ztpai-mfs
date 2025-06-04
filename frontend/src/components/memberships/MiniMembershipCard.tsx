@@ -13,6 +13,8 @@ import api from "../../api/axiosApi.ts";
 import { useNavigate } from "react-router-dom";
 import UserMembership from "./UserMembershipProp.ts";
 import { useUserRole } from "../../hooks/useUserRole.ts";
+import { Autocomplete, TextField } from "@mui/material";
+
 
 interface UserOption {
     id: number;
@@ -27,7 +29,7 @@ export default function MiniMembershipCard() {
     const [memberships, setMemberships] = useState<UserMembership[]>([]);
     const [allMemberships, setAllMemberships] = useState<UserMembership[]>([]);
     const [users, setUsers] = useState<UserOption[]>([]);
-    const [selectedUserId, setSelectedUserId] = useState<number | "all">("all");
+    const [selectedUser, setSelectedUser] = useState<UserOption | null>(null);
     const [loadingId, setLoadingId] = useState<number | null>(null);
 
     useEffect(() => {
@@ -71,34 +73,27 @@ export default function MiniMembershipCard() {
         }
     };
 
-    const filteredMemberships =
-        selectedUserId === "all"
-            ? allMemberships
-            : allMemberships.filter((m) => m.user.id === selectedUserId);
+    const filteredMemberships = selectedUser
+        ? allMemberships.filter((m) => m.user.id === selectedUser.id)
+        : allMemberships;
+
 
     return (
         <Box sx={{ width: "90vw", padding: 2 }}>
             {role !== "member" && (
-                <FormControl size="small" sx={{ mb: 2, width: 285 }}>
-                    <InputLabel>User</InputLabel>
-                    <Select
-                        value={selectedUserId}
-                        label="User"
-                        onChange={(e) =>
-                            setSelectedUserId(
-                                e.target.value === "all" ? "all" : Number(e.target.value)
-                            )
-                        }
-                    >
-                        <MenuItem value="all">All users</MenuItem>
-                        {users.map((user) => (
-                            <MenuItem key={user.id} value={user.id}>
-                                {user.first_name} {user.last_name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <Autocomplete
+                    options={users}
+                    value={selectedUser}
+                    onChange={(_, value) => setSelectedUser(value)}
+                    getOptionLabel={(user) => `${user.first_name} ${user.last_name}`}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Filter by user" size="small" />
+                    )}
+                    sx={{ mb: 2, width: 285 }}
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
+                />
             )}
+
 
             <Box
                 sx={{
